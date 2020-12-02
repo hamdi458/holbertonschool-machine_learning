@@ -3,7 +3,7 @@
 
 
 def add_arrays(arr1, arr2):
-    """ add"""
+    """ add listes"""
     liste = []
     if len(arr1) != len(arr2):
         return None
