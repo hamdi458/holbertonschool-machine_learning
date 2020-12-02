@@ -3,7 +3,7 @@
 
 
 def matrix_shape(matrix):
-    """find matrice shape"""    
+    """find matrice shape"""
     mat_new = []
     while isinstance(matrix, list):
         mat_new.append(len(matrix))
