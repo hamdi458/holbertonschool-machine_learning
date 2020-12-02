@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""wiw"""
+"""shape matrice"""
 
 
 def matrix_shape(matrix):
-    """wiw"""    
+    """find matrice shape"""    
     mat_new = []
     while isinstance(matrix, list):
         mat_new.append(len(matrix))
