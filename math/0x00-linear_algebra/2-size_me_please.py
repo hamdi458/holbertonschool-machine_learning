@@ -3,7 +3,7 @@
 
 
 def matrix_shape(matrix):
-"""wiw"""    
+    """wiw"""    
     mat_new = []
     while isinstance(matrix, list):
         mat_new.append(len(matrix))
