@@ -2,7 +2,7 @@
 """calculates the integral of a polynomial"""
 
 
-def poly_derivative(poly):
+def poly_derivative(poly, c=0):
     """calculates the integral of a polynomial"""
     if isinstance(poly, list) == 0 or poly == []:
         return None
