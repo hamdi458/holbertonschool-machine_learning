@@ -15,6 +15,6 @@ def poly_derivative(poly):
         x = item / j
         if int(x) == x:
             new_poly.append((int)(x))
-        else : 
+        else:
             new_poly.append(x)
     return new_poly
