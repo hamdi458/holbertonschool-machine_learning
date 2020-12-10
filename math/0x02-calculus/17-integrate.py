@@ -8,7 +8,7 @@ def poly_derivative(poly, c=0):
         return None
     if len(poly) == 1:
         return [0]
-    new_poly = [0]
+    new_poly = [c]
     j = 0
     for item in poly:
         j = j + 1
