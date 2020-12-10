@@ -8,7 +8,7 @@ def poly_integral(poly, C=0):
         return None
     if isinstance(C, (float, int)) == 0:
         return None
-    if len(poly) == 1:
+    if len(poly) == 1 and poly[0] == 0:
         return [C]
     new_poly = [C]
     j = 0
