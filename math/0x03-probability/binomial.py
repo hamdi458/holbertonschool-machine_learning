@@ -28,14 +28,14 @@ class Binomial:
             self.p = mean/self.n
 
     def f(self, n):
-        """fact"""
+        """calcul fact"""
         r = 1
         for i in range(1, int(n) + 1):
             r *= i
         return r
 
     def pmf(self, k):
-        """ pmf"""
+        """calcul pmf"""
         k = int(k)
         if k < 0:
             return 0
