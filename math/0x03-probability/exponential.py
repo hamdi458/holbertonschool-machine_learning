@@ -13,7 +13,7 @@ class Exponential:
         else:
             if type(data) is not list:
                 raise ValueError("data must be a list")
-            if len(data) < 3:
+            if len(data) <= 2:
                 raise ValueError("data must contain multiple values")
             lam = len(data)/sum(data)
             self.lambtha = lam
