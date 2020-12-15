@@ -2,7 +2,7 @@
 """loi de poisson"""
 
 
-class Poisson:
+class Exponential:
     """class poisson"""
 
     def __init__(self, data=None, lambtha=1.):
@@ -15,27 +15,19 @@ class Poisson:
                 raise ValueError("data must be a list")
             if len(data) < 2:
                 raise ValueError("data must contain multiple values")
-            lam = sum(data)/len(data)
+            lam = len(data)/sum(data)
             self.lambtha = (float)(lam)
 
-    def pmf(self, k):
-        """calcul pmf"""
-        π = 3.1415926536
+    def pdf(self, x):
+        """calcul pdf"""
         e = 2.7182818285
-        k = (int)(k)
-        if k < 0:
+        if x < 0:
             return 0
-        x = 1
-        for i in range(2, k + 1):
-            x *= i
-        return((self.lambtha ** k) / x) * e ** (-self.lambtha)
+        return (self.lambtha) * e ** (-self.lambtha * x)
 
-    def cdf(self, k):
+    def cdf(self, x):
         """calcul cdf"""
-        k = (int)(k)
-        if k < 0:
+        e = 2.7182818285
+        if x < 0:
             return 0
-        cdf = 0
-        for i in range(0, k + 1):
-            cdf += self.pmf(i)
-        return cdf
+        return 1 - e ** (-self.lambtha * x)
