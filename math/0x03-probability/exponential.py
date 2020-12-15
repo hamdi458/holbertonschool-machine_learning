@@ -15,8 +15,7 @@ class Exponential:
                 raise ValueError("data must be a list")
             if len(data) <= 2:
                 raise ValueError("data must contain multiple values")
-            lam = len(data)/sum(data)
-            self.lambtha = lam
+            self.lambtham = len(data)/sum(data)
 
     def pdf(self, x):
         """calcul pdf"""
