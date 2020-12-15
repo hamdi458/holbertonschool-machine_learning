@@ -6,6 +6,7 @@ class Poisson:
     """class poisson"""
 
     def __init__(self, data=None, lambtha=1.):
+        self.data = data
         if data is None:
             if lambtha < 0:
                 raise ValueError("lambtha must be a positive value")
@@ -15,8 +16,7 @@ class Poisson:
                 raise ValueError("data must be a list")
             if len(data) < 3:
                 raise ValueError("data must contain multiple values")
-            lam = sum(data)/len(data)
-            self.lambtha = (float)(lam)
+            self.lambtha = sum(data)/len(data)
 
     def pmf(self, k):
         """calcul pmf"""
