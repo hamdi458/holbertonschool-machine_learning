@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""loi de poisson"""
+"""loi de Normal"""
 
 
 class Normal:
-    """class poisson"""
-
+    """class normal"""
     def __init__(self, data=None, mean=0., stddev=1.):
         self.data = data
         if data is None:
@@ -18,10 +17,10 @@ class Normal:
             if len(data) < 3:
                 raise ValueError("data must contain multiple values")
             self.mean = sum(data)/len(data)
-            s = 0
-            for i in data:
-                s += (i - self.mean) ** 2
-            self.stddev = (s/len(data)) ** 0.5
+            som = 0
+            for item in data:
+                som += (item - self.mean) ** 2
+            self.stddev = (som / len(data)) ** 0.5
 
     def z_score(self, x):
         """calcul pdf"""
