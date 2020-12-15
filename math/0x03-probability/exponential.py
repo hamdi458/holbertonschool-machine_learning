@@ -11,7 +11,7 @@ class Exponential:
                 raise ValueError("lambtha must be a positive value")
             self.lambtha = float(lambtha)
         else:
-            if not isinstance(data, list):
+            if type(data) is not list:
                 raise TypeError("data must be a list")
             if len(data) < 3:
                 raise ValueError("data must contain multiple values")
