@@ -6,6 +6,7 @@ class Normal:
     """class poisson"""
 
     def __init__(self, data=None, mean=0., stddev=1.):
+        self.data = data
         if data is None:
             self.mean = (float)(mean)
             self.stddev = (float)(stddev)
