@@ -8,10 +8,10 @@ class Normal:
     def __init__(self, data=None, mean=0., stddev=1.):
         self.data = data
         if data is None:
-            self.mean = (float)(mean)
-            self.stddev = (float)(stddev)
             if stddev <= 0:
                 raise ValueError("stddev must be a positive value")
+            self.mean = (float)(mean)
+            self.stddev = (float)(stddev)
         else:
             if type(data) is not list:
                 raise ValueError("data must be a list")
