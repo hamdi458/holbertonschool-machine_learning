@@ -26,3 +26,21 @@ class Binomial:
             self.p = (1-variance/mean)
             self.n = round(mean/self.p)
             self.p = mean/self.n
+
+    def factoriel(self,n):
+        """fact"""
+        fact = 1
+        for i in range(1, int(n) + 1):
+            fact = fact * i
+        return fact                 
+ 
+    def pmf(self, k):
+        """calcul pmf"""
+        k = int(k)
+        if k < 0:
+            return 0
+        q = 1 - self.p
+        a = self.factoriel(self.n) / (self.factoriel(self.n - k) * self.factoriel(k))
+        b = (self.p** k) * (q ** (self.n-k))
+        return comb * b
+        
