@@ -6,6 +6,7 @@ class Exponential:
     """class poisson"""
 
     def __init__(self, data=None, lambtha=1.):
+        self.data = data
         if data is None:
             if lambtha < 0:
                 raise ValueError("lambtha must be a positive value")
@@ -13,10 +14,10 @@ class Exponential:
         else:
             if type(data) is not list:
                 raise ValueError("data must be a list")
-            if len(data) < 2:
+            if len(data) < 3:
                 raise ValueError("data must contain multiple values")
             lam = len(data)/sum(data)
-            self.lambtha = (float)(lam)
+            self.lambtha = lam
 
     def pdf(self, x):
         """calcul pdf"""
