@@ -12,7 +12,7 @@ class Normal:
             self.stddev = float(stddev)
             self.mean = float(mean)
         else:
-            if not isinstance(data, list):
+            if type(data) is not list:
                 raise TypeError("data must be a list")
             if len(data) < 3:
                 raise ValueError("data must contain multiple values")
@@ -41,8 +41,12 @@ class Normal:
         first = 1 / (self.stddev * (2 * π)**0.5)
         return first * e ** (-0.5*((x - self.mean) / self.stddev)**2)
 
-    def cdf(self, x):
-        """calcul cdf"""
+    def erf (self, x):
+        """ erf function"""
         π = 3.1415926536
-        e = 2.7182818285
-        return (1/(2 * π) ** 0.5) * e ** (- x ** 2 / 2)
+        return (2 / π **(1/2)) * (x - ((x **3)/3) + ((x **5)/10) - ((x **7)/42) + ((x **9)/216))
+ 
+ 
+    def cdf(self, x):
+        """ cdf fn"""
+        return (1/2) * (1+ self.erf((x - self.mean) / (self.stddev * (2 **(1/2))))) 
