@@ -41,12 +41,15 @@ class Normal:
         first = 1 / (self.stddev * (2 * π)**0.5)
         return first * e ** (-0.5*((x - self.mean) / self.stddev)**2)
 
-    def erf (self, x):
+    def erf(self, x):
         """ erf function"""
         π = 3.1415926536
-        return (2 / π **(1/2)) * (x - ((x **3)/3) + ((x **5)/10) - ((x **7)/42) + ((x **9)/216))
- 
- 
+        a = (2 / π ** (1 / 2))
+        b = ((x ** 3) / 3)
+        c = ((x ** 7) / 42)
+        return a * (x - b + ((x ** 5) / 10) - c + ((x ** 9) / 216))
+
     def cdf(self, x):
         """ cdf fn"""
-        return (1/2) * (1+ self.erf((x - self.mean) / (self.stddev * (2 **(1/2))))) 
+        a = (1 + self.erf((x - self.mean) / (self.stddev * (2 ** (1 / 2)))))
+        return (1 / 2) * a
