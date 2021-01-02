@@ -47,7 +47,5 @@ class Neuron:
         return cost
 
     def evaluate(self, X, Y):
-        nx = (X.shape[0])
-        m = (X.shape[1])
         pred = np.round(self.forward_prop(X))
-        return pred.astype(np.int), self.cost(Y, self.forward_prop(X))
+        return self.__A.astype(np.int), self.cost(Y, self.forward_prop(X))
