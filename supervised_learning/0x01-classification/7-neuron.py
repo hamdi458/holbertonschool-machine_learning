@@ -75,11 +75,9 @@ class Neuron:
                 raise TypeError("step must be an integer")
             if step < 0 or step > iterations:
                 raise ValueError("step must be positive and <= iterations")
-        
         arrX = []
         arrY = []
-        
-        for it in range(iterations):
+        for it in range(iterations + 1):
             self.forward_prop(X)
             self.gradient_descent(X, Y, self.__A, alpha)
             j = self.cost(Y, self.__A)
@@ -93,3 +91,4 @@ class Neuron:
             plt.ylabel('cost')
             plt.plot(arrX,arrY)
             plt.show()
+        return self.evaluate(X, Y)
