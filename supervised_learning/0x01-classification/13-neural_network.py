@@ -77,9 +77,9 @@ class NeuralNetwork:
         """gradient descent"""
         m = Y.shape[1]
         dz2 = A2 - Y
-        dw2 = 1 / m * np.dot(dz2 , A1.T)
+        dw2 = 1 / m * np.dot(dz2, A1.T)
         db2 = 1 / m * np.sum(dz2, axis=1, keepdims=True)
-        dz1 = np.dot(self.__W2.T, dz2) * (A1 - A1 ** 2) 
+        dz1 = np.dot(self.__W2.T, dz2) * (A1 - A1 ** 2)
         db1 = 1 / m * np.sum(dz1, axis=1, keepdims=True)
         dw1 = 1 / m * np.dot(dz1, X.T)
         self.__W1 = self.__W1 - alpha * dw1
