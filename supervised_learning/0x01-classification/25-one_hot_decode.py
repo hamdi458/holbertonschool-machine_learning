@@ -5,6 +5,8 @@ import numpy as np
 
 def one_hot_decode(one_hot):
     """converts a numeric label vector into a one-hot matrix"""
+    if type(one_hot) != np.ndarray:
+        return None
     if len(one_hot.shape) != 2:
-       return None
+        return None
     return np.argmax(one_hot.T, axis=1)
