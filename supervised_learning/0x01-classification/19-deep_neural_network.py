@@ -53,6 +53,7 @@ class DeepNeuralNetwork:
         return self.cache["A"+str(self.L)], self.cache
 
     def cost(self, Y, A):
+        """Calculates the cost of the model using logistic regression"""
         m = Y.shape[1]
         q = - (1 / m)
         e = np.multiply(1 - Y, np.log(1.0000001 - A))
