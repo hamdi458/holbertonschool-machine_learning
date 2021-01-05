@@ -8,4 +8,3 @@ def one_hot_decode(one_hot):
     if len(one_hot.shape) == 2:
         return np.argmax(one_hot.T, axis=1)
     return None
-    
