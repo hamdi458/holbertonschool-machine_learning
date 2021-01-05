@@ -8,7 +8,7 @@ def one_hot_encode(Y, classes):
     if type(Y) is not np.ndarray:
         return None
     try:
-        b = np.zeros((Y.size, Y.max()+1))
+        b = np.zeros((Y.size, classes))
         b[np.arange(Y.size), Y] = 1
         return b.T
     except Exception:
