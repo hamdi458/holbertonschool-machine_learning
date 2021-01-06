@@ -108,7 +108,7 @@ class DeepNeuralNetwork:
                 print(f"Cost after {it} iterations: {j}")
                 arrX.append(it + step)
                 arrY.append(j)
-        if graph:
+        if graph is True:
             plt.title('Training Cost')
             plt.xlabel('iteration')
             plt.ylabel('cost')
