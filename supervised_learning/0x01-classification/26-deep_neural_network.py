@@ -87,7 +87,7 @@ class DeepNeuralNetwork:
         """evaluation of the training data after iterations"""
         if type(iterations) is not int:
             raise TypeError("iterations must be an integer")
-        if iterations <= 0:
+        if iterations < 1:
             raise ValueError("iterations must be a positive integer")
         if type(alpha) is not float:
             raise TypeError("alpha must be a float")
@@ -101,9 +101,9 @@ class DeepNeuralNetwork:
         arrX = []
         arrY = []
         for it in range(iterations):
-            self.forward_prop(X)
-            self.gradient_descent(Y, self.cache, alpha)
-            j = self.cost(Y, self.cache["A"+str(self.L)])
+            a, b = self.forward_prop(X)
+            self.gradient_descent(Y, b, alpha)
+            j = self.cost(Y, a)
             if verbose:
                 print(f"Cost after {it} iterations: {j}")
                 arrX.append(it + step)
