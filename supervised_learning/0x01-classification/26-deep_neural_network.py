@@ -118,8 +118,18 @@ class DeepNeuralNetwork:
 
     def save(self, filename):
         """ instance method"""
+        if not filename:
+            return None
+        if not(filename.endswith(".pkl")):
+            filename = filename + ".pkl"
+        with open(filename, 'wb') as f:
+            return pickle.dump(self, f)
+
+    @staticmethod
+    def load(filename):
+        """ load file .pkl"""
         try:
             with open(filename, 'rb') as f:
-                return pickle.dump(self, f)
+                return pickle.load(f)
         except FileNotFoundError:
             return None
