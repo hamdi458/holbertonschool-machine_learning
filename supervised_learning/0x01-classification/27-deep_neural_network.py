@@ -52,7 +52,7 @@ class DeepNeuralNetwork:
             b = self.weights["b" + str(i+1)]
             z = np.dot(self.weights['W'+str(i+1)], self.cache["A"+str(i)])+b
             if i == self.L - 1:
-                g = np.exp(z) / np.sum(np.exp(z), axis=0, keepdims=True)
+                g = np.exp(z) / np.sum(np.exp(z), axis=0)
             else:
                 g = 1/(1+np.exp(-z))
             self.cache["A"+str(i+1)] = g
@@ -104,13 +104,13 @@ class DeepNeuralNetwork:
                 raise ValueError("step must be positive and <= iterations")
         arrX = []
         arrY = []
-        for it in range(iterations + 1):
+        for it in range(iterations):
             self.forward_prop(X)
             self.gradient_descent(Y, self.cache, alpha)
             j = self.cost(Y, self.cache["A"+str(self.L)])
             if verbose:
-                print(f"Cost after {it} iterations: {j}")
-                arrX.append(it)
+                print("Cost after {} iterations: {}".format(it, j))
+                arrX.append(it + step)
                 arrY.append(j)
         if graph:
             plt.title('Training Cost')
