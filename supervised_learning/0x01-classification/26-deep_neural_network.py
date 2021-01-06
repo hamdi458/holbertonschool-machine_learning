@@ -93,7 +93,7 @@ class DeepNeuralNetwork:
             raise TypeError("alpha must be a float")
         if alpha <= 0:
             raise ValueError("alpha must be positive")
-        if verbose == True or graph == True:
+        if verbose or graph:
             if type(step) is not int:
                 raise TypeError("step must be an integer")
             if step < 0 or step > iterations:
@@ -108,29 +108,28 @@ class DeepNeuralNetwork:
                 print(f"Cost after {it} iterations: {j}")
                 arrX.append(it)
                 arrY.append(j)
-        if graph==True:
+        if graph:
             plt.title('Training Cost')
             plt.xlabel('iteration')
             plt.ylabel('cost')
-            plt.plot(arrX,arrY)
+            plt.plot(arrX, arrY)
             plt.show()
         return self.evaluate(X, Y)
 
     def save(self, filename):
-        """ save file"""
+        """ instance method"""
         if not filename:
             return None
         if not(filename.endswith(".pkl")):
             filename = filename + ".pkl"
-        with open(filename, 'wb') as fileObject:
-            return pickle.dump(self, fileObject)
+        with open(filename, 'wb') as f:
+            return pickle.dump(self, f)
 
     @staticmethod
     def load(filename):
-        """load file"""
+        """ load file .pkl"""
         try:
-            with open(filename, 'rb') as fileObject:
-                res = pickle.load(fileObject)
-            return res
+            with open(filename, 'rb') as f:
+                return pickle.load(f)
         except FileNotFoundError:
             return None
