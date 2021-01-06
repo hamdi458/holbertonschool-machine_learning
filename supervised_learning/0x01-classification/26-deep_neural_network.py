@@ -118,5 +118,8 @@ class DeepNeuralNetwork:
 
     def save(self, filename):
         """ instance method"""
-        with open(filename, 'rb') as f:
-            pickle.dump(self, f)
+        try:
+            with open(filename, 'rb') as f:
+                pickle.dump(self, f)
+        except Exception:
+            return None
