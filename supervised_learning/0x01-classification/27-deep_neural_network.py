@@ -49,10 +49,10 @@ class DeepNeuralNetwork:
         """Calculates the forward propagation of the neural network"""
         self.cache['A0'] = X
         for i in range(self.L):
-            b = self.__weights["b" + str(i+1)]
+            b = self.weights["b" + str(i+1)]
             z = np.dot(self.weights['W'+str(i+1)], self.cache["A"+str(i)])+b
-            if i == self.L:
-                g = np.exp(z) / np.sum(np.exp(z))
+            if i == self.L - 1:
+                g = np.exp(z) / np.sum(np.exp(z), axis=0, keepdims=True)
             else:
                 g = 1/(1+np.exp(-z))
             self.cache["A"+str(i+1)] = g
@@ -61,15 +61,16 @@ class DeepNeuralNetwork:
     def cost(self, Y, A):
         """Calculates the cost of the model using logistic regression"""
         m = Y.shape[1]
-        lyy = Y * np.log(A)
+        lyy = - Y * np.log(A)
         j = 1/m*np.sum(lyy)
         return j
 
     def evaluate(self, X, Y):
         """Evaluates the neural network’s predictions"""
-        c, c1 = self.forward_prop(X)
-        pred = np.round(c)
-        return pred.astype(np.int), self.cost(Y, c)
+        softmax, cache = self.forward_prop(X)
+        pred_evalute = np.where(softmax == np.amax(softmax, axis=0), 1, 0)
+        cost = self.cost(Y, softmax)
+        return pred_evalute, cost
 
     def gradient_descent(self, Y, cache, alpha=0.05):
         """gradient descent"""
@@ -120,20 +121,20 @@ class DeepNeuralNetwork:
         return self.evaluate(X, Y)
 
     def save(self, filename):
-        """ save file .pkl"""
+        """ instance method"""
         if not filename:
             return None
         if not(filename.endswith(".pkl")):
             filename = filename + ".pkl"
-        with open(filename, 'wb') as fileObject:
-            return pickle.dump(self, fileObject)
+        with open(filename, 'wb') as f:
+            pickle.dump(self, f)
+            f.close()
 
     @staticmethod
     def load(filename):
         """ load file .pkl"""
         try:
-            with open(filename, 'rb') as fileObject:
-                res = pickle.load(fileObject)
-            return res
+            with open(filename, 'rb') as f:
+                return pickle.load(f)
         except FileNotFoundError:
             return None
