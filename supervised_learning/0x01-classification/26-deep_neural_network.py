@@ -100,7 +100,7 @@ class DeepNeuralNetwork:
                 raise ValueError("step must be positive and <= iterations")
         arrX = []
         arrY = []
-        for it in range(iterations + 1):
+        for it in range(iterations):
             self.forward_prop(X)
             self.gradient_descent(Y, self.cache, alpha)
             j = self.cost(Y, self.cache["A"+str(self.L)])
