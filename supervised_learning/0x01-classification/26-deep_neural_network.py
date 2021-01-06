@@ -106,7 +106,7 @@ class DeepNeuralNetwork:
             j = self.cost(Y, self.cache["A"+str(self.L)])
             if verbose:
                 print(f"Cost after {it} iterations: {j}")
-                arrX.append(it)
+                arrX.append(it + step)
                 arrY.append(j)
         if graph:
             plt.title('Training Cost')
