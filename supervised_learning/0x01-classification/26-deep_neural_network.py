@@ -105,9 +105,9 @@ class DeepNeuralNetwork:
             self.gradient_descent(Y, cache, alpha)
             cost = self.cost(Y, A)
             if verbose:
-                print(f"Cost after {it} iterations: {j}")
-                arrX.append(it + step)
-                arrY.append(j)
+                print(f"Cost after {i} iterations: {cost}")
+                arrX.append(i + step)
+                arrY.append(cost)
         if graph:
             plt.title('Training Cost')
             plt.xlabel('iteration')
