@@ -100,14 +100,14 @@ class DeepNeuralNetwork:
                 raise ValueError("step must be positive and <= iterations")
         arrX = []
         arrY = []
-        for i in range(iterations):
-            A, cache = self.forward_prop(X)
-            self.gradient_descent(Y, cache, alpha)
-            cost = self.cost(Y, A)
+        for it in range(iterations):
+            self.forward_prop(X)
+            self.gradient_descent(Y, self.cache, alpha)
+            j = self.cost(Y, self.cache["A"+str(self.L)])
             if verbose:
-                print("Cost after {} iterations: {}".format(i, cost))
-                arrX.append(i + step)
-                arrY.append(cost)
+                print("Cost after {} iterations: {}".format(it, j))
+                arrX.append(it + step)
+                arrY.append(j)
         if graph:
             plt.title('Training Cost')
             plt.xlabel('iteration')
