@@ -67,10 +67,9 @@ class DeepNeuralNetwork:
 
     def evaluate(self, X, Y):
         """Evaluates the neural network’s predictions"""
-        self.forward_prop(X)
-        mx = np.amax(self.cache["A"+str(self.L)], axis=0)
-        pred = np.where(self.cache["A"+str(self.L)] == m, 1, 0)
-        j = self.cost(Y, self.cache["A"+str(self.L)])
+        a, b = self.forward_prop(X)
+        pred = np.where(a == np.amax(a, axis=0), 1, 0)
+        j = self.cost(Y, a)
         return pred, j
 
     def gradient_descent(self, Y, cache, alpha=0.05):
