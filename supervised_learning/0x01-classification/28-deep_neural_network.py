@@ -93,7 +93,11 @@ class DeepNeuralNetwork:
             self.__weights["W"+str(i)] = self.__weights["W"+str(i)]-(dw*alpha)
             self.__weights["b"+str(i)] = self.__weights["b"+str(i)]-(db*alpha)
             w = (self.cache["A"+str(i-1)] - self.cache["A"+str(i-1)] ** 2)
-            dz = np.dot(wht["W"+str(i)].T, dz) * w
+            if self.__activation == 'sig':
+                dz = np.dot(wht["W"+str(i)].T, dz) * w
+            elif self.__activation == 'tanh':
+                qqq = (1 - np.power(cache["A"+str(i-1)], 2))
+                dz = np.dot(wht["W"+str(i)].T, dz) * qqq
         return self.__weights
 
     def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True,
