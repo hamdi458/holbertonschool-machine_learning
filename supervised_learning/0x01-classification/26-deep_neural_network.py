@@ -120,6 +120,6 @@ class DeepNeuralNetwork:
         """ instance method"""
         try:
             with open(filename, 'rb') as f:
-                pickle.dump(self, f)
-        except Exception:
+                return pickle.dump(self, f)
+        except FileNotFoundError:
             return None
