@@ -29,12 +29,7 @@ def train(X_train, Y_train, X_valid, Y_valid, layer_sizes,
     saver = tf.train.Saver()
     with tf.Session() as sess:
         sess.run(init)
-        x = tf.get_collection('x', scope=None)[0]
-        y = tf.get_collection('y', scope=None)[0]
-        y_pred = tf.get_collection('y_pred', scope=None)[0]
-        loss = tf.get_collection('loss', scope=None)[0]
-        accuracy = tf.get_collection('accuracy', scope=None)[0]
-        train_op = tf.get_collection('train_op', scope=None)[0]
+        
         for i in range(iterations + 1):
             j = sess.run(loss, {x: X_train, y: Y_train})
             acc = sess.run(accuracy, {x: X_train, y: Y_train})
