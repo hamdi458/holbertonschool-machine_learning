@@ -7,5 +7,6 @@ import numpy as np
 
 
 def normalize(X, m, s):
+    """normalizes (standardizes) a matrix"""
     normalize = (X - m) / s
     return normalize
