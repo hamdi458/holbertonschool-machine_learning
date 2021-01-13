@@ -13,8 +13,12 @@ def cat(datax, datay, batch_size):
     num = int(datax.shape[0] / batch_size) + (datax.shape[0] % batch_size > 0)
 
     for i in(range(num)):
-        arrdatax.append(datax[i*batch_size:(i+1)*batch_size])
-        arrdatay.append(datay[i*batch_size:(i+1)*batch_size])
+        if i != num - 1:
+            arrdatax.append(datax[i*batch_size:(i+1)*batch_size])
+            arrdatay.append(datay[i*batch_size:(i+1)*batch_size])
+        else:
+            arrdatax.append(datax[i:])
+            arrdatay.append(datay[i:])
     return arrdatay, arrdatax
 
 
