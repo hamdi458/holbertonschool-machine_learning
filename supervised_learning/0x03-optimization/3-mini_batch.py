@@ -45,9 +45,9 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
             X_shuffled_train, Y_shuffled_train = shuffle_data(X_train, Y_train)
 
             train_loss = sess.run(loss, {
-                x: X_shuffled_train, y: Y_shuffled_train})
+                x: X_train, y: Y_rain})
             train_acc = sess.run(accuracy, {
-                x: X_shuffled_train, y: Y_shuffled_train})
+                x: X_train, y: Y_train})
             valid_acc = sess.run(accuracy, {
                 x: X_valid, y: Y_valid})
 
@@ -59,11 +59,10 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
             print("\tValidation Cost: {}".format(valid_loss))
             print("\tValidation Accuracy: {}".format(
                 valid_acc))
-            arrx, arry = cat(Y_shuffled_train, X_shuffled_train, batch_size)
             if epoche != epochs:
-                for i in range(len(arrx)+1):
+                arrx, arry = cat(Y_shuffled_train, X_shuffled_train, batch_size)
+                for i in range(1, len(arrx)+1):
                     sess.run(train_op, {x: arrx[i], y: arry[i]})
-
                     train_loss = sess.run(loss, {x: arrx[i-1], y: arry[i-1]})
                     train_acc = sess.run(accuracy, {x: arrx[i-1], y: arry[i-1]})
                     if(i % 100 == 0 and i > 0):
