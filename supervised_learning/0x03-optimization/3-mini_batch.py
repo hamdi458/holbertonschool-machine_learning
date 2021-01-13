@@ -56,14 +56,13 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
                 valid_acc))
             arrx, arry = cat(nbr_batches,
                              Y_shuffled_train, X_shuffled_train, batch_size)
-
-            for i in range(nbr_batches+1):
-
-                train_loss = sess.run(loss, {x: arrx[i-1], y: arry[i-1]})
-                train_acc = sess.run(accuracy, {x: arrx[i-1], y: arry[i-1]})
-                if(i % 100 == 0 and i > 0):
-                    print("\tStep {}:".format(i))
-                    print("\tTraining Cost: {}".format(train_loss))
-                    print("\tTraining Accuracy: {}".format(train_acc))
-                sess.run(train_op, {x: arrx[i], y: arry[i]})
+            if epoche != epochs:
+                for i in range(nbr_batches+1):
+                    sess.run(train_op, {x: arrx[i], y: arry[i]})
+                    train_loss = sess.run(loss, {x: arrx[i-1], y: arry[i-1]})
+                    train_acc = sess.run(accuracy, {x: arrx[i-1], y: arry[i-1]})
+                    if(i % 100 == 0 and i > 0):
+                        print("\tStep {}:".format(i))
+                        print("\tTraining Cost: {}".format(train_loss))
+                        print("\tTraining Accuracy: {}".format(train_acc))
         return saver.save(sess, save_path)
