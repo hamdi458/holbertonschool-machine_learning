@@ -26,6 +26,8 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
                      batch_size=32, epochs=5,
                      load_path="/tmp/model.ckpt",
                      save_path="/tmp/model.ckpt"):
+    """trains a loaded neural network model
+    using mini-batch gradient descent"""
 
     init = tf.global_variables_initializer()
     with tf.Session() as sess:
@@ -38,9 +40,6 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
         loss = tf.get_collection('loss', scope=None)[0]
         accuracy = tf.get_collection('accuracy', scope=None)[0]
         train_op = tf.get_collection('train_op', scope=None)[0]
-
-        nbr_batches = X_train.shape[0]/batch_size
-        nbr_batches = int(nbr_batches)
         for epoche in range(epochs+1):
             X_shuffled_train, Y_shuffled_train = shuffle_data(X_train, Y_train)
 
@@ -60,11 +59,13 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
             print("\tValidation Accuracy: {}".format(
                 valid_acc))
             if epoche != epochs:
-                arrx, arry = cat(Y_shuffled_train, X_shuffled_train, batch_size)
+                arrx, arry = cat(
+                             Y_shuffled_train, X_shuffled_train, batch_size)
                 for i in range(1, len(arrx)+1):
                     sess.run(train_op, {x: arrx[i-1], y: arry[i-1]})
                     train_loss = sess.run(loss, {x: arrx[i-1], y: arry[i-1]})
-                    train_acc = sess.run(accuracy, {x: arrx[i-1], y: arry[i-1]})
+                    train_acc = sess.run(accuracy, {x: arrx[i-1],
+                                         y: arry[i-1]})
                     if(i % 100 == 0 and i > 0):
                         print("\tStep {}:".format(i))
                         print("\tTraining Cost: {}".format(train_loss))
