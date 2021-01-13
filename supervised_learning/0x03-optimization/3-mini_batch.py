@@ -57,9 +57,8 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
             print("\tTraining Cost: {}".format(train_loss))
             print("\tTraining Accuracy: {}".format(train_acc))
             print("\tValidation Cost: {}".format(valid_loss))
-            print("\tValidation Accuracy: {}".format(
-                valid_acc))
-            if epoche != epochs:
+            print("\tValidation Accuracy: {}".format(valid_acc))
+            if epoche < epochs:
                 arrx, arry = cat(
                              Y_shuffled_train, X_shuffled_train, batch_size)
                 for i in range(1, len(arrx)+1):
@@ -67,7 +66,7 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
                     train_loss = sess.run(loss, {x: arrx[i-1], y: arry[i-1]})
                     train_acc = sess.run(accuracy, {x: arrx[i-1],
                                          y: arry[i-1]})
-                    if(i % 100 == 0 and i > 0):
+                    if not i % 100:
                         print("\tStep {}:".format(i))
                         print("\tTraining Cost: {}".format(train_loss))
                         print("\tTraining Accuracy: {}".format(train_acc))
