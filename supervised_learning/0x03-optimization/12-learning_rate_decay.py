@@ -8,5 +8,10 @@ import tensorflow as tf
 def batch_norm(Z, gamma, beta, epsilon):
     """creates a learning rate decay operation in tensorflow
     using inverse time decay"""
-    tf.compat.train.inverse_time_decay(alpha, global_step, decay_steps,
-                                       decay_rate, staircase=True)
+    t = tf.compat.train.inverse_time_decay(
+        alpha,
+        global_step,
+        decay_steps,
+        decay_rate,
+        staircase=True)
+    return t
