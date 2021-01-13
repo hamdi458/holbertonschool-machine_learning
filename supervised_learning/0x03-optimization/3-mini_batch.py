@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-
+"""Write the function that trains a loaded neural network model
+using mini-batch gradient descent:"""
 import tensorflow as tf
 
 
