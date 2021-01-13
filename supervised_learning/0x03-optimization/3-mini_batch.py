@@ -17,8 +17,8 @@ def cat(datax, datay, batch_size):
             arrdatax.append(datax[i*batch_size:(i+1)*batch_size])
             arrdatay.append(datay[i*batch_size:(i+1)*batch_size])
         else:
-            arrdatax.append(datax[i:])
-            arrdatay.append(datay[i:])
+            arrdatax.append(datax[i*batch_size:])
+            arrdatay.append(datay[i*batch_size:])
     return arrdatay, arrdatax
 
 
