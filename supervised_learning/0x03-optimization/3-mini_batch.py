@@ -61,7 +61,7 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
                 valid_acc))
             arrx, arry = cat(Y_shuffled_train, X_shuffled_train, batch_size)
             if epoche != epochs:
-                for i in range(nbr_batches+1):
+                for i in range(len(arrx)+1):
                     sess.run(train_op, {x: arrx[i], y: arry[i]})
 
                     train_loss = sess.run(loss, {x: arrx[i-1], y: arry[i-1]})
