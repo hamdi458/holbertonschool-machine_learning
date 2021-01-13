@@ -45,7 +45,7 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
             X_shuffled_train, Y_shuffled_train = shuffle_data(X_train, Y_train)
 
             train_loss = sess.run(loss, {
-                x: X_train, y: Y_rain})
+                x: X_train, y: Y_train})
             train_acc = sess.run(accuracy, {
                 x: X_train, y: Y_train})
             valid_acc = sess.run(accuracy, {
