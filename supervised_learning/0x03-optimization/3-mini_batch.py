@@ -36,7 +36,9 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
     """trains a loaded neural network model
     using mini-batch gradient descent"""
 
+    init = tf.global_variables_initializer()
     with tf.Session() as sess:
+        sess.run(init)
         saver = tf.train.import_meta_graph('{}.meta'.format(load_path))
         saver.restore(sess, '{}'.format(load_path))
 
@@ -63,16 +65,16 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
             print("\tValidation Cost: {}".format(valid_loss))
             print("\tValidation Accuracy: {}".format(
                 valid_acc))
-            if epoche < epochs:
+            if epoche != epochs:
                 arrx, arry = cat(
                              Y_shuffled_train, X_shuffled_train, batch_size)
-                for i in range(1, len(arrx)+1):
-                    sess.run(train_op, {x: arrx[i-1], y: arry[i-1]})
-                    train_loss = sess.run(loss, {x: arrx[i-1], y: arry[i-1]})
-                    train_acc = sess.run(accuracy, {x: arrx[i-1],
-                                         y: arry[i-1]})
-                    if not i % 100:
-                        print("\tStep {}:".format(i))
+                for i in range(len(arrx)):
+                    sess.run(train_op, {x: arrx[i], y: arry[i]})
+                    train_loss = sess.run(loss, {x: arrx[i], y: arry[i]})
+                    train_acc = sess.run(accuracy, {x: arrx[i],
+                                         y: arry[i]})
+                    if((i + 1) % 100 == 0 and i > 0):
+                        print("\tStep {}:".format(i+1))
                         print("\tTraining Cost: {}".format(train_loss))
                         print("\tTraining Accuracy: {}".format(train_acc))
         return saver.save(sess, save_path)
