@@ -68,7 +68,7 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
                                                feed_dict={x: X_batch[b - 1],
                                                           y: Y_bathc[b - 1]})
 
-                    if(b % 100 == 0 and b > 0):	
+                    if(b % 100 == 0):	
                         print('\tStep {}:'.format(b))
                         print('\t\tCost: {}'.format(loss_tr))
                         print('\t\tAccuracy: {}'.format(acc_tr))
