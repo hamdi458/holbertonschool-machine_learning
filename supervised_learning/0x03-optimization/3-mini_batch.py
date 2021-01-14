@@ -36,9 +36,7 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
     """trains a loaded neural network model
     using mini-batch gradient descent"""
 
-    init = tf.global_variables_initializer()
     with tf.Session() as sess:
-        sess.run(init)
         saver = tf.train.import_meta_graph('{}.meta'.format(load_path))
         saver.restore(sess, '{}'.format(load_path))
 
