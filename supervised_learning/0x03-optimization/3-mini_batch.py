@@ -58,7 +58,7 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
             print('\tValidation Cost: {}'.format(loss_v))
             print('\tValidation Accuracy: {}'.format(acc_v))
 
-            if i < epochs:
+            if epoche != epochs:	
                 Y_bathc, X_batch = cat(X,Y, batch_size)
                 for b in range(1, len(X_batch) + 1):
                     sess.run(train_op, feed_dict={x: X_batch[b - 1],
@@ -68,7 +68,7 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
                                                feed_dict={x: X_batch[b - 1],
                                                           y: Y_bathc[b - 1]})
 
-                    if not b % 100:
+                    if(b % 100 == 0 and b > 0):	
                         print('\tStep {}:'.format(b))
                         print('\t\tCost: {}'.format(loss_tr))
                         print('\t\tAccuracy: {}'.format(acc_tr))
