@@ -11,7 +11,13 @@ def cat(datax, datay, batch_size):
     """split data"""
     arrdatax = []
     arrdatay = []
-    num = int(datax.shape[0] / batch_size)
+    m = datax.shape[0]
+
+    num = m / batch_size
+    if num % 1 != 0:
+        num = int(num + 1)
+    else:
+        num = int(num)
 
     for i in(range(num)):
         arrdatax.append(datax[i*batch_size:((i+1)*batch_size)])
