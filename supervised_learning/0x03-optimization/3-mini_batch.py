@@ -62,15 +62,15 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
             if ep != epochs:
                 Y_batch, X_batch = cat(X_shuffle, Y_shuffle, batch_size)
                 for i in range(len(X_batch)):
-                    sess.run(train_op, {x: X_batch[i - 1], y: Y_batch[i - 1]})
+                    sess.run(train_op, {x: X_batch[i], y: Y_batch[i]})
 
                     loss_train = sess.run(loss, {x: X_batch[i],
                                                  y: Y_batch[i]})
                     acc_train = sess.run(accuracy, {x: X_batch[i],
                                                     y: Y_batch[i]})
 
-                    if(i % 100 == 0):
-                        print('\tStep {}:'.format(i))
+                    if(i+1 % 100 == 0):
+                        print('\tStep {}:'.format(i+1))
                         print('\t\tCost: {}'.format(loss_train))
                         print('\t\tAccuracy: {}'.format(acc_train))
 
