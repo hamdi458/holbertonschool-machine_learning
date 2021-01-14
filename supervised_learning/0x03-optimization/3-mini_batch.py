@@ -65,7 +65,7 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
                     train_acc = sess.run(accuracy, {x: arrx[i-1],
                                          y: arry[i-1]})
                     if((i + 1) % 100 == 0 and i > 0):
-                        print("\tStep {}:".format(i))
+                        print("\tStep {}:".format(i+1))
                         print("\tTraining Cost: {}".format(train_loss))
                         print("\tTraining Accuracy: {}".format(train_acc))
         return saver.save(sess, save_path)
