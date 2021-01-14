@@ -35,9 +35,9 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
                      save_path="/tmp/model.ckpt"):
     """trains a loaded neural network model
     using mini-batch gradient descent"""
-    init = tf.global_variables_initializer()	
+    init = tf.global_variables_initializer()
     with tf.Session() as sess:
-        sess.run(init)	
+        sess.run(init)
         saver = tf.train.import_meta_graph(load_path + '.meta')
         saver.restore(sess, load_path)
 
@@ -49,27 +49,27 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid,
 
         for ep in range(epochs + 1):
             X_shuffle, Y_shuffle = shuffle_data(X_train, Y_train)
-            loss_train, acc_train = sess.run((loss, accuracy),
-                                       {x: X_train, y: Y_train})
-            loss_valid, acc_valid = sess.run((loss, accuracy),
-                                     feed_dict={x: X_valid, y: Y_valid})
+            loss_train = sess.run(loss, {x: X_train, y: Y_train})
+            acc_train = sess.run(accuracy, {x: X_train, y: Y_train})
+            loss_valid = sess.run(loss, {x: X_valid, y: Y_valid})
+            acc_valid = sess.run(accuracy, {x: X_valid, y: Y_valid})
             print('After {} epochs:'.format(ep))
             print('\tTraining Cost: {}'.format(loss_train))
             print('\tTraining Accuracy: {}'.format(acc_train))
             print('\tValidation Cost: {}'.format(loss_valid))
             print('\tValidation Accuracy: {}'.format(acc_valid))
 
-            if ep != epochs:	
+            if ep != epochs:
                 Y_batch, X_batch = cat(X_shuffle, Y_shuffle, batch_size)
                 for i in range(1, len(X_batch) + 1):
-                    sess.run(train_op, {x: X_batch[i - 1],
-                                                  y: Y_batch[i - 1]})
+                    sess.run(train_op, {x: X_batch[i - 1], y: Y_batch[i - 1]})
 
-                    loss_train, acc_train = sess.run((loss, accuracy),
-                                               {x: X_batch[i - 1],
-                                                          y: Y_batch[i - 1]})
+                    loss_train = sess.run(loss, {x: X_batch[i-1],
+                                                 y: Y_batch[i-1]})
+                    acc_train = sess.run(accuracy, {x: X_batch[i-1],
+                                                    y: Y_batch[i-1]})
 
-                    if(i % 100 == 0):	
+                    if(i % 100 == 0):
                         print('\tStep {}:'.format(i))
                         print('\t\tCost: {}'.format(loss_train))
                         print('\t\tAccuracy: {}'.format(acc_train))
