@@ -11,6 +11,7 @@ def create_placeholders(nx, classes):
     y = tf.placeholder(tf.float32, shape=[None, classes], name="y")
     return x, y
 
+
 def create_layer(prev, n, activation):
     """ create layer"""
     kernel = tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG")
@@ -19,12 +20,11 @@ def create_layer(prev, n, activation):
                             )
     return layer(prev)
 
+
 def shuffle_data(X, Y):
     """shuffles the data points in two matrices the same way"""
     i = np.random.permutation(np.arange(X.shape[0]))
     return X[i], Y[i]
-
-
 
 
 def learning_rate_decay(alpha, decay_rate, global_step, decay_step):
@@ -37,6 +37,7 @@ def learning_rate_decay(alpha, decay_rate, global_step, decay_step):
         decay_rate,
         staircase=True)
     return t
+
 
 def create_batch_norm_layer(prev, n, activation):
     """batch normalization layer for a neural network in tensorflow"""
@@ -51,18 +52,21 @@ def create_batch_norm_layer(prev, n, activation):
     gamma = tf.Variable(tf.ones([n]))
     beta = tf.Variable(tf.zeros([n]))
     a = tf.nn.batch_normalization(z, mean=batch_mean1, variance=batch_var1,
-                                   offset=beta, scale=gamma,
-                                   variance_epsilon=1e-8
-                                   )
+                                  offset=beta, scale=gamma,
+                                  variance_epsilon=1e-8)
     return activation(a)
+
+
 def calculate_accuracy(y, y_pred):
     """calculates the accuracy of a prediction:"""
     pred = tf.equal(tf.argmax(y, axis=1), tf.argmax(y_pred, axis=1))
     return tf.reduce_mean(tf.cast(pred, tf.float32))
 
+
 def calculate_loss(y, y_pred):
     """calculates the softmax cross-entropy loss of a prediction"""
     return tf.losses.softmax_cross_entropy(y, y_pred)
+
 
 def create_Adam_op(loss, alpha, beta1, beta2, epsilon):
     """training operation for a neural network in tensorflow
@@ -75,6 +79,8 @@ def create_Adam_op(loss, alpha, beta1, beta2, epsilon):
         use_locking=False,
         name='Adam')
     return minimize.minimize(loss)
+
+
 def forward_prop(x, layer_sizes=[], activations=[]):
     """forward propagation graph for the neural network"""
     for i, act in zip(layer_sizes, activations):
@@ -85,6 +91,8 @@ def forward_prop(x, layer_sizes=[], activations=[]):
             y = create_batch_norm_layer(x, i, act)
             x = y
     return y
+
+
 def cat(datax, datay, batch_size):
     """split data"""
     arrdatax = []
@@ -105,8 +113,14 @@ def cat(datax, datay, batch_size):
             arrdatax.append(datax[i*batch_size:])
             arrdatay.append(datay[i*batch_size:])
     return arrdatay, arrdatax
+
+
 def model(Data_train, Data_valid, layers, activations,
-          alpha=0.001, beta1=0.9, beta2=0.999, epsilon=1e-8, decay_rate=1, batch_size=32, epochs=5, save_path='/tmp/model.ckpt'):
+          alpha=0.001, beta1=0.9, beta2=0.999, epsilon=1e-8,
+          decay_rate=1, batch_size=32, epochs=5, save_path='/tmp/model.ckpt'):
+    """ builds, trains, and saves a neural network model in tensorflow
+    using Adam optimization, mini-batch gradient descent,
+    learning rate decay, and batch normalization:"""
     X_train = Data_train[0]
     Y_train = Data_train[1]
     X_valid = Data_valid[0]
@@ -159,4 +173,4 @@ def model(Data_train, Data_valid, layers, activations,
                         print('\t\tAccuracy: {}'.format(acc_train))
 
         save_path = saver.save(sess, save_path)
-    return save_path        
+    return save_path
