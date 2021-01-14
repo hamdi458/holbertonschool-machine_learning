@@ -171,6 +171,7 @@ def model(Data_train, Data_valid, layers, activations,
                         print('\tStep {}:'.format(i))
                         print('\t\tCost: {}'.format(loss_train))
                         print('\t\tAccuracy: {}'.format(acc_train))
+            sess.run(tf.assign(global_step, global_step + 1))
 
         save_path = saver.save(sess, save_path)
     return save_path
