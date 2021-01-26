@@ -11,7 +11,7 @@ def train_model(network, data, labels, batch_size,
     if learning_rate_decay and validation_data:
         def decayed_learning_rate(epochs):
             return alpha / (1 + decay_rate * epochs)
-        lrate = k.callbacks.LearningRateScheduler(decayed_learning_rate)
+        lrate = k.callbacks.LearningRateScheduler(decayed_learning_rate, 1)
         callbacks_list = [lrate]
         history = network.fit(data, labels, batch_size=batch_size,
                               epochs=epochs, callbacks=callbacks_list,
