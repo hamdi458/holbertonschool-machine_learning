@@ -10,9 +10,10 @@ def build_model(nx, layers, activations, lambtha, keep_prob):
     model = tf.Sequential()
     for i in range(len(layers)):
         if i == 0:
-            model.add(tf.layers.Dense(layers[i], input_dim=nx, activation=activations[i],
+            model.add(tf.layers.Dense(layers[i], input_dim=nx,
+                      activation=activations[i],
                       kernel_regularizer=tf.regularizers.l2(lambtha)))
-        if i > 0:
+        else:
             model.add(tf.layers.Dense(layers[i], activation=activations[i],
                       kernel_regularizer=tf.regularizers.l2(lambtha)))
         if i < len(layers) - 1:
