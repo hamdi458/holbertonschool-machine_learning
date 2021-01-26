@@ -6,7 +6,7 @@ import tensorflow.keras as K
 
 def save_weights(network, filename):
     """saves an weights"""
-    network.save_weights(filename, )
+    network.save_weights(filename)
     return None
 
 
