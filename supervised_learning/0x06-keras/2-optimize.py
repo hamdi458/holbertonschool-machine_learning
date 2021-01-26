@@ -8,7 +8,7 @@ import tensorflow.keras as k
 
 def optimize_model(network, alpha, beta1, beta2):
     """Adam optimization for a keras model with categorical"""
-    opt = keras.optimizers.Adam(alpha, beta1, beta2)
+    opt = k.optimizers.Adam(alpha, beta1, beta2)
     network.compile(loss='categorical_crossentropy', optimizer=opt,
                     metrics=['accuracy'])
     return None
