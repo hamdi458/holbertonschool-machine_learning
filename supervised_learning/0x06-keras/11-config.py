@@ -1,4 +1,4 @@
-#!/usr/bin/env python3  
+#!/usr/bin/env python3
 """ saves and loads a model’s weights:"""
 import tensorflow.keras as K
 
