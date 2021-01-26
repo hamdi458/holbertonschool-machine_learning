@@ -6,6 +6,7 @@ import tensorflow.keras as k
 
 
 def build_model(nx, layers, activations, lambtha, keep_prob):
+    """builds a neural network with the Keras library"""
     x = k.Input(shape=(nx,))
     for i in range(len(layers)):
         if i == 0:
