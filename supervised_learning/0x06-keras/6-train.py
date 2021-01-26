@@ -7,7 +7,7 @@ def train_model(network, data, labels, batch_size, epochs,
                 validation_data=None, early_stopping=False,
                 patience=0, verbose=True, shuffle=False):
     """ train the model using early stopping:"""
-    es = tf.keras.callbacks.EarlyStopping(monitor='val_loss',
+    es = k.callbacks.EarlyStopping(monitor='val_loss',
                                           mode='min', verbose=verbose,
                                           patience=patience)
     if early_stopping and validation_data:
