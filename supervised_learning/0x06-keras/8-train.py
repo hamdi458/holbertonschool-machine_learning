@@ -28,9 +28,8 @@ def train_model(network, data, labels, batch_size,
                               epochs=epochs, callbacks=callbacks_stop_list,
                               verbose=verbose, validation_data=validation_data)
     if save_best:
-        checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1,
-                                     save_best_only=True, mode='auto',
-                                     period=1)
+        checkpoint = ModelCheckpoint(filepath, monitor='val_loss',
+                                     save_best_only=True)
         callbacks_list_save = [checkpoint]
         history = network.fit(x=data, y=labels, epochs=epochs,
                               verbose=verbose,
