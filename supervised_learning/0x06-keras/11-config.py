@@ -14,5 +14,4 @@ def load_config(filename):
     """loads a model’s weights"""
     with open(filename, "r") as fi:
         read = fi.read()
-    load = k.models.model_from_json(read)
-    return load
+    return k.models.model_from_json(read)
