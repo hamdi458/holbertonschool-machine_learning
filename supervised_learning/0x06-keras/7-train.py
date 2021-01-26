@@ -25,9 +25,6 @@ def train_model(network, data, labels, batch_size,
         history = network.fit(data, labels, batch_size=batch_size,
                               epochs=epochs, callbacks=callbacks_stop_list,
                               verbose=verbose, validation_data=validation_data)
-    if validation_data is None:
-        callback = None
-
     history = network.fit(
         data,
         labels,
@@ -35,6 +32,5 @@ def train_model(network, data, labels, batch_size,
         epochs=epochs,
         validation_data=validation_data,
         shuffle=shuffle,
-        verbose=verbose,
-        callbacks=callback)
+        verbose=verbose)
     return history
