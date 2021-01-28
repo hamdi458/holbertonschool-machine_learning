@@ -2,7 +2,6 @@
 """function def convolve_grayscale_same(images, kernel):
 that performs a same convolution on grayscale images:"""
 import numpy as np
-from math import ceil, floor
 
 
 def convolve_grayscale_same(images, kernel):
@@ -21,9 +20,9 @@ def convolve_grayscale_same(images, kernel):
     Kr, Kc = kernel.shape
     kr = Kr // 2
     kc = Kc // 2
-    for dr in range(-kr, kr+1):
+    for dr in range(-kr, kr+1,1):
         mr = np.roll(images, -dr, axis=1)
-        for dc in range(-kc, kc + 1):
+        for dc in range(-kc, kc + 1,1):
             mrc = np.roll(mr, -dc, axis=2)
             mc = mc+kernel[dr+kr, dc+kc]*mrc
     return mc
