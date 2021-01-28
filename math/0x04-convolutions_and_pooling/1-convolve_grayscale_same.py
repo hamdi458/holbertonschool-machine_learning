@@ -22,6 +22,7 @@ def convolve_grayscale_same(images, kernel):
     for x in range(input_w):
         for y in range(input_h):
             output[:, y, x] = (kernel *
-                               padded_images[:, y:y+filter_h,
-                                      x:x+filter_w]).sum(axis=(1, 2))
+                               padded_images[:,
+                                             y:y+filter_h,
+                                             x:x+filter_w]).sum(axis=(1, 2))
     return output
