@@ -26,10 +26,12 @@ def convolve_channels(images, kernel, padding='same', stride=(1, 1)):
                                           :]).sum(axis=(1, 2, 3))
         return output
     elif padding == 'same':
-        ph = int(((input_h - 1) * sh + filter_h - input_h) / 2 + 1)
-        pw = int(((input_w - 1) * sw + filter_w - input_w) / 2 + 1)
+        ph = ((input_h - 1) * sh + filter_h - input_h) / 2 + 1
+        pw = ((input_w - 1) * sw + filter_w - input_w) / 2 + 1
+        ph, pw = int(ph), int(pw)
         output = np.zeros((m, input_h, input_w))
-        image_padded = np.zeros((m, input_h + 2 * ph, input_w + 2 * pw, images.shape[3]))
+        image_padded = np.zeros((m, int(input_h + 2 * ph),
+                                 int(input_w + 2 * pw), images.shape[3]))
         image_padded[:, ph:input_h + ph, pw:input_w + pw, :] = images
         for x in range(input_w):
             for y in range(input_h):
