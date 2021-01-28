@@ -28,16 +28,21 @@ def convolve(images, kernels, padding='same', stride=(1, 1)):
         ph = ((input_h - 1) * sh + filter_h - input_h) / 2 + 1
         pw = ((input_w - 1) * sw + filter_w - input_w) / 2 + 1
         ph, pw = int(ph), int(pw)
-        output = np.zeros((m, input_h, input_w))
+        output = np.zeros((m, input_h, input_w, output_d))
         image_padded = np.zeros((m, int(input_h + 2 * ph),
                                  int(input_w + 2 * pw), images.shape[3]))
         image_padded[:, ph:input_h + ph, pw:input_w + pw, :] = images
-        for x in range(input_w):
-            for y in range(input_h):
-                output[:, y, x] = np.sum(
-                    image_padded[:, y * sh: y * sh + filter_h,
-                                 x * sw: x * sw + filter_w, :] * kernel,
-                    axis=(1, 2, 3))
+        output_h = int((input_h - filter_h) // sh + 1)
+        output_w = int((input_w - filter_w) // sw + 1)
+
+        for ch in range(output_d):
+            for x in range(output_w):
+                for y in range(output_h):
+                    output[:, y, x, ch] = (kernels[:, :, :, ch] *
+                                           images[:,
+                                           y*stride[0]:y*stride[0]+filter_h,
+                                           x*stride[1]:x*stride[1]+filter_w,
+                                           :]).sum(axis=(1, 2, 3))
         return output
     else:
         ph, pw = padding
