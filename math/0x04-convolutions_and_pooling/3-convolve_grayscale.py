@@ -35,6 +35,8 @@ def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
                     axis=(1, 2))
         return output
     else:
+        m, h, w = images.shape
+        kh, kw = kernel.shape
         ph, pw = padding
         filter_w, filter_h = kernel.shape[1], kernel.shape[0]
         oh = h - kh + (2 * ph) + 1
