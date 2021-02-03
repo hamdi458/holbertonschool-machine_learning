@@ -30,7 +30,6 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
     kh, kw, c_prev, c_new = W.shape
     sh, sw = stride
     if padding == 'valid':
-        p_h, p_w = 0
         output_h = int(((h_prev - kh) / sh) + 1)
         output_w = int(((w_prev - kw) / sw) + 1)
         image_padded = np.copy(A_prev)
