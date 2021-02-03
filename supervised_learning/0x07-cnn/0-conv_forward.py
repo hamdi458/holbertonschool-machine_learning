@@ -30,27 +30,20 @@ def conv_forward(A_prev, W, b, activation, padding="same", stride=(1, 1)):
     kh, kw, c_prev, c_new = W.shape
     sh, sw = stride
     if padding == 'valid':
-        output_h = int(((h_prev - kh) / sh) + 1)
-        output_w = int(((w_prev - kw) / sw) + 1)
-        image_padded = np.copy(A_prev)
+        p_h = 0
+        p_w = 0
 
-    else:
-        if padding == 'same':
+    if padding == 'same':
+        p_h = int(((h - 1) * sh + kh - kh % 2 - h) / 2) + 1
+        p_w = int(((w - 1) * sw + kw - kw % 2 - w) / 2) + 1
 
-            p_h = int(((h - 1) * sh + kh - kh % 2 - h) / 2) + 1
-            p_w = int(((w - 1) * sw + kw - kw % 2 - w) / 2) + 1
+    output_h = int(((h_prev - kh + (2 * p_h)) / sh) + 1)
+    output_w = int(((w_prev - kw + (2 * p_w)) / sw) + 1)
 
-        else:
-            p_h, p_w = padding
-        """ output_h = h and output_w = w"""
-
-        output_h = int(((h_prev - kh + (2 * p_h)) / sh) + 1)
-        output_w = int(((w_prev - kw + (2 * p_w)) / sw) + 1)
-
-        image_padded = np.zeros((m, h_prev + output_h,
-                                 w_prev + output_w, c_prev))
-        image_padded = np.pad(A_prev, ((0, 0), (p_h, p_h),
-                              (p_w, p_w), (0, 0)), 'constant')
+    image_padded = np.zeros((m, h_prev + output_h,
+                                w_prev + output_w, c_prev))
+    image_padded = np.pad(A_prev, ((0, 0), (p_h, p_h),
+                            (p_w, p_w), (0, 0)), 'constant')
 
     output = np.zeros((m, output_h, output_w, c_new))
     for ch in range(c_new):
