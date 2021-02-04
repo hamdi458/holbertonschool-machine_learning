@@ -34,8 +34,7 @@ def lenet5(x, y):
                            activation='relu')(lay5)
     lay7 = tf.layers.Dense(
                            units=10,
-                           kernel_initializer=kernel,
-                           activation='softmax')(lay6)
+                           kernel_initializer=kernel)(lay6)
     softmax = tf.nn.softmax(lay7)
     pred = tf.equal(tf.argmax(y, axis=1), tf.argmax(lay7, axis=1))
     acc = tf.reduce_mean(tf.cast(pred, tf.float32))
