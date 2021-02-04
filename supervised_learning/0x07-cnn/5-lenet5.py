@@ -35,7 +35,7 @@ def lenet5(X):
     lay7 = K.layers.Dense(activation='softmax',
                           units=10,
                           kernel_initializer=kernel)(lay6)
-    network = K.Model(inputs=X, outputs=lay7)
+    network = K.models.Model(inputs=X, outputs=lay7)
     opt = K.optimizers.Adam()
     network.compile(loss='categorical_crossentropy', optimizer=opt,
                     metrics=['accuracy'])
