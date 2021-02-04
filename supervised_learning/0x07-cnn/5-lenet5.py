@@ -22,7 +22,7 @@ def lenet5(X):
     lay4 = K.layers.MaxPooling2D(
                                   strides=(2, 2),
                                   pool_size=(2, 2))(lay3)
-    flat = K.layers.Flatten()(lay4)
+    flat = K.layers.Flatten(data_format=None)(lay4)
 
     lay5 = K.layers.Dense(
                            units=120,
@@ -35,7 +35,7 @@ def lenet5(X):
     lay7 = K.layers.Dense(activation='softmax',
                           units=10,
                           kernel_initializer=kernel)(lay6)
-    network = K.models.Model(inputs=X, outputs=lay7)
+    network = K.Model(inputs=X, outputs=lay7)
     opt = K.optimizers.Adam()
     network.compile(loss='categorical_crossentropy', optimizer=opt,
                     metrics=['accuracy'])
