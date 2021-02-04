@@ -38,11 +38,10 @@ def pool_backward(dA, A_prev, kernel_shape, stride=(1, 1), mode='max'):
                                 c] += np.multiply(mask, dA[i, h, w, c])
 
                     elif mode == "average":
-                        print('w')
                         # Get the value a from dA (≈1 line)
                         da = dA[i, h, w, c]
                         # Define the shape of the filter as fxf (≈1 line)
-                        average = dz / (kh * kw)
+                        average = da / (kh * kw)
                         a = np.ones(kh, kw) * average
                         # Distribute it to get the correct slice of dA_prev
                         # Add the distributed value of da. (≈1 line)
