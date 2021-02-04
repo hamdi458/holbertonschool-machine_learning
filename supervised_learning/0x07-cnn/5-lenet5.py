@@ -7,7 +7,7 @@ def lenet5(X):
     """that builds a modified version of the LeNet5 architecture using keras"""
     kernel = K.initializers.he_normal(seed=None)
     lay1 = K.layers.Conv2D(kernel_size=(5, 5),
-                           strides=1, padding='SAME',
+                           strides=1, padding='same',
                            kernel_initializer=kernel,
                            filters=6, activation='relu')(X)
     lay2 = K.layers.MaxPooling2D(
@@ -16,7 +16,7 @@ def lenet5(X):
     lay3 = K.layers.Conv2D(
                             filters=16,
                             kernel_size=5,
-                            padding='VALID',
+                            padding='valid',
                             activation='relu',
                             kernel_initializer=kernel)(lay2)
     lay4 = K.layers.MaxPooling2D(
