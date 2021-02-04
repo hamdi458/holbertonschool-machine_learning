@@ -22,7 +22,7 @@ def lenet5(X):
     lay4 = K.layers.MaxPooling2D(
                                   strides=(2, 2),
                                   pool_size=(2, 2))(lay3)
-    flat = K.layers.Flatten(data_format=None)(lay4)
+    flat = K.layers.Flatten()(lay4)
 
     lay5 = K.layers.Dense(
                            units=120,
