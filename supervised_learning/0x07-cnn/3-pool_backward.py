@@ -28,11 +28,12 @@ def pool_backward(dA, A_prev, kernel_shape, stride=(1, 1), mode='max'):
                     if mode == "max":
                         # Use the corners and "c" to define the current slice
                         # from a_prev
+                        print('w')
                         a_prev_slice = a_prev[vert_start:vert_end,
                                               horiz_start:horiz_end, c]
                         # Create the mask from a_prev_slice (≈1 line)
 
-                        mask = (a_prev_slice == np.max(a_prev_slice))
+                        mask = a_prev_slice == np.max(a_prev_slice)
                         dA_prev[i, vert_start:vert_end,
                                 horiz_start:horiz_end,
                                 c] += np.multiply(mask, dA[i, h, w, c])
