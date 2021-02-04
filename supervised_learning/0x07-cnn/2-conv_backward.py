@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-
+"""back propagation over a convolutional layer of a neural network"""
 import numpy as np
 
 
 def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
-    """"""
+    """back propagation over a convolutional layer of a neural network"""
 
     (kh, kw, c_prev, c_new) = W.shape
     m, h_new, w_new, c_new = dZ.shape
