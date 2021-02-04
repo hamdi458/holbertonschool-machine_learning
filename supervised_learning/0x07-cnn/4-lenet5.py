@@ -6,10 +6,10 @@ import tensorflow as tf
 def lenet5(x, y):
     """builds a modified version of the LeNet5 architecture using tensorflow"""
     kernel = tf.contrib.layers.variance_scaling_initializer()
-    lay1 = tf.layers.conv2d(x, kernel_size=(5, 5),
+    lay1 = tf.layers.conv2d(kernel_size=(5, 5),
                             strides=1, padding='SAME',
                             kernel_initializer=kernel,
-                            filters=6, activation='relu')
+                            filters=6, activation='relu')(x)
     lay2 = tf.layers.MaxPooling2D(
                                   strides=(2, 2),
                                   pool_size=[2, 2])(lay1)
