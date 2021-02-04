@@ -22,12 +22,12 @@ def lenet5(x, y):
     lay4 = tf.layers.MaxPooling2D(
                                   strides=(2, 2),
                                   pool_size=(2, 2))(lay3)
-    fc0 = tf.contrib.layers.flatten(lay4)
+    flat = tf.contrib.layers.flatten(lay4)
 
     lay5 = tf.layers.Dense(
                            units=120,
                            kernel_initializer=kernel,
-                           activation='relu')(fc0)
+                           activation='relu')(flat)
     lay6 = tf.layers.Dense(
                            units=84,
                            kernel_initializer=kernel,
