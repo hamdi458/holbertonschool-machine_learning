@@ -74,32 +74,3 @@ def conv_backward(dZ, A_prev, W, b, padding="same", stride=(1, 1)):
                 dA_prev[i, :, :, :] = da_prev_pad[ph:h_prev + ph,
                                                   pw: w_prev + pw, :]
         return da_prev_pad, dW, db
-    else:
-        ph, pw = padding
-        A_prev_pad = np.pad(A_prev, pad_width=((0, 0),
-                                               (ph, ph), (pw, pw), (0, 0)))
-        dA_prev_pad = np.pad(dA_prev,
-                             pad_width=((0, 0), (ph, ph), (pw, pw), (0, 0)))
-        for i in range(m):
-            a_prev_pad = A_prev_pad[i]
-            da_prev_pad = dA_prev_pad[i]
-            for h in range(h_new):
-                for w in range(w_new):
-                    for c in range(c_new):
-
-                        vert_start = h * sh
-                        vert_end = vert_start + kh
-                        horiz_start = w * sw
-                        horiz_end = horiz_start + kw
-
-                        a_slice = a_prev_pad[vert_start:vert_end,
-                                             horiz_start:horiz_end, :]
-
-                        da_prev_pad[vert_start:vert_end,
-                                    horiz_start:horiz_end, :] += W[
-                                        :, :, :, c] * dZ[i, h, w, c]
-                        dW[:, :, :, c] += a_slice * dZ[i, h, w, c]
-                        db[:, :, :, c] += dZ[i, h, w, c]
-                dA_prev[i, :, :, :] = da_prev_pad[ph:h_prev + ph,
-                                                  pw: w_prev + pw, :]
-        return da_prev_pad, dW, db
