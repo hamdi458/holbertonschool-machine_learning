@@ -13,7 +13,7 @@ def resnet50():
                              strides=2, padding='same',
                              kernel_initializer=kernel,
                              filters=64)(input)
-    output = K.layers.BatchNormalization()(output)
+    output = K.layers.BatchNormalization(axis=3)(output)
     output = K.layers.Activation('relu')(output)
     output = K.layers.MaxPooling2D((3, 3), strides=(2, 2))(output)
 
