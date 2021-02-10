@@ -42,7 +42,7 @@ def projection_block(A_prev, filters, s=2):
                                 kernel_initializer=kernel,
                                 filters=F12,)(A_prev)
     conv_proj = K.layers.BatchNormalization()(conv_proj)
-    al = K.layers.Add()([conv_proj, conv3])
+    al = K.layers.Add()([conv3, conv_proj])
 
     output = K.layers.Activation('relu')(al)
     return output
