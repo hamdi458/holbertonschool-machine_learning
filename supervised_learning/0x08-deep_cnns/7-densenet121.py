@@ -13,9 +13,6 @@ def densenet121(growth_rate=32, compression=1.0):
     All convolutions should be preceded by Batch Normalization and
         a rectified linear activation (ReLU), respectively
     All weights should use he normal initialization
-    You may use:
-        dense_block = __import__('5-dense_block').dense_block
-        transition_layer = __import__('6-transition_layer').transition_layer
     Returns: the keras model
     """
     kernel = K.initializers.he_normal(seed=None)
