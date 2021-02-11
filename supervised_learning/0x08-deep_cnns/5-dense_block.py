@@ -21,13 +21,14 @@ def dense_block(X, nb_filters, growth_rate, layers):
     for i in range(layers):
         dense_factor = K.layers.BatchNormalization()(output)
         dense_factor = K.layers.ReLU()(dense_factor)
-        dense_factor = K.layers.Conv2D(128,
+        bottleneck = growth_rate * 4
+        dense_factor = K.layers.Conv2D(bottleneck,
                                        (1, 1),
                                        kernel_initializer=kernel,
                                        padding='same')(dense_factor)
         dense_factor = K.layers.BatchNormalization()(dense_factor)
         dense_factor = K.layers.ReLU()(dense_factor)
-        dense_factor = K.layers.Conv2D(32, (3, 3),
+        dense_factor = K.layers.Conv2D(growth_rate, (3, 3),
                                        kernel_initializer=kernel,
                                        padding='same')(dense_factor)
         output = K.layers.concatenate([output, dense_factor])
