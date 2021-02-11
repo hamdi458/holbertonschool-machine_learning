@@ -26,7 +26,7 @@ def dense_block(X, nb_filters, growth_rate, layers):
                                        (1, 1),
                                        kernel_initializer=kernel,
                                        padding='same')(dense_factor)
-        """bottleneck finish"""                               
+        """bottleneck finish"""
         dense_factor = K.layers.BatchNormalization()(dense_factor)
         dense_factor = K.layers.ReLU()(dense_factor)
         dense_factor = K.layers.Conv2D(growth_rate, (3, 3),
