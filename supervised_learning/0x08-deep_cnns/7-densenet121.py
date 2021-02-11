@@ -15,8 +15,8 @@ def densenet121(growth_rate=32, compression=1.0):
     All weights should use he normal initialization
     Returns: the keras model
     """
-    kernel = K.initializers.he_normal(seed=None)
-    img_input = K.Input(shape=[224, 224, 3])
+    kernel = K.initializers.he_normal()
+    img_input = K.Input(shape=(224, 224, 3))
     X = K.layers.BatchNormalization()(img_input)
     X = K.layers.ReLU()(X)
     filters = 0
