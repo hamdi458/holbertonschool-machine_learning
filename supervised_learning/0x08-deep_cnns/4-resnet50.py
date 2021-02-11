@@ -19,7 +19,7 @@ def resnet50():
                                    padding='same')(output)
 
     output = projection_block(output, [64, 64, 256], s=1)
-    output = identity_block(output, [64, 64, 256], s=2)
+    output = identity_block(output, [64, 64, 256])
     output = identity_block(output, [64, 64, 256])
 
     output = projection_block(output, [128, 128, 512])
