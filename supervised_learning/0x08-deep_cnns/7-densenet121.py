@@ -6,15 +6,7 @@ transition_layer = __import__('6-transition_layer').transition_layer
 
 
 def densenet121(growth_rate=32, compression=1.0):
-    """
-    growth_rate is the growth rate
-    compression is the compression factor
-    You can assume the input data will have shape (224, 224, 3)
-    All convolutions should be preceded by Batch Normalization and
-        a rectified linear activation (ReLU), respectively
-    All weights should use he normal initialization
-    Returns: the keras model
-    """
+    """densenet121 growth rate"""
     X_input = K.Input(shape=(224, 224, 3))
     kernel = K.initializers.he_normal()
 
