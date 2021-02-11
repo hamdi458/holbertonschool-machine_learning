@@ -23,13 +23,14 @@ def densenet121(growth_rate=32, compression=1.0):
     kernel = K.initializers.he_normal(seed=None)
     X = K.layers.BatchNormalization()(img_input)
     X = K.layers.ReLU()(X)
-
-    X = K.layers.Conv2D(64,
+    filters = 0
+    if filters <= 0:
+        filters = 2*growth_rate
+    X = K.layers.Conv2D(filters,
                         (7, 7), strides=2, padding="same",
                         kernel_initializer=kernel)(X)
     X = K.layers.MaxPooling2D(pool_size=(3, 3), strides=2, padding='same')(X)
-
-    X, filters = dense_block(X, 2*growth_rate, growth_rate, 6)
+    X, filters = dense_block(X, filters, growth_rate, 6)
     X, filters = transition_layer(X, filters, compression)
     X, filters = dense_block(X, filters, growth_rate, 12)
     X, filters = transition_layer(X, filters, compression)
