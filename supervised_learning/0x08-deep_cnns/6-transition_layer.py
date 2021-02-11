@@ -22,5 +22,6 @@ def transition_layer(X, nb_filters, compression):
     output = K.layers.Conv2D(int(filters),
                              (1, 1), padding="same",
                              kernel_initializer=kernel)(output)
-    output = K.layers.AveragePooling2D()(output)
+    output = K.layers.AveragePooling2D(pool_size=(2, 2),
+                                       strides=(2, 2))(output)
     return output, int(filters)
