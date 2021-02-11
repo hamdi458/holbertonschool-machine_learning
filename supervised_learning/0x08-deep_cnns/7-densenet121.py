@@ -6,29 +6,36 @@ transition_layer = __import__('6-transition_layer').transition_layer
 
 
 def densenet121(growth_rate=32, compression=1.0):
-    """densenet121 growth rate"""
-    X_input = K.Input(shape=(224, 224, 3))
+    """
+    growth_rate is the growth rate
+    compression is the compression factor
+    You can assume the input data will have shape (224, 224, 3)
+    All convolutions should be preceded by Batch Normalization and
+        a rectified linear activation (ReLU), respectively
+    All weights should use he normal initialization
+    Returns: the keras model
+    """
     kernel = K.initializers.he_normal()
+    img_input = K.Input(shape=(224, 224, 3))
 
-    X = K.layers.BatchNormalization(axis=3)(X_input)
-    X = K.layers.Activation('relu')(X)
+    X = K.layers.BatchNormalization()(img_input)
+    X = K.layers.ReLU()(X)
     filters = 0
     if filters <= 0:
         filters = 2 * growth_rate
-    X = K.layers.Conv2D(filters, (7, 7), strides=(2, 2),
+    X = K.layers.Conv2D(filters=filters,
+                        kernel_size=(7, 7), strides=2, padding="same",
                         kernel_initializer=kernel)(X)
-
-    X = K.layers.MaxPooling2D(3, strides=2)(X)
-
-    X, filters = dense_block(X, nb_filters=filters,
-                             growth_rate=growth_rate, layers=6)
+    X = K.layers.MaxPooling2D(pool_size=(3, 3), strides=2, padding='same')(X)
+    X, filters = dense_block(X, filters, growth_rate, 6)
     X, filters = transition_layer(X, filters, compression)
     X, filters = dense_block(X, filters, growth_rate, 12)
     X, filters = transition_layer(X, filters, compression)
     X, filters = dense_block(X, filters, growth_rate, 24)
     X, filters = transition_layer(X, filters, compression)
     X, filters = dense_block(X, filters, growth_rate, 16)
-    X = K.layers.AveragePooling2D(pool_size=6)(X)
+    X = K.layers.AveragePooling2D(pool_size=7)(X)
     output = K.layers.Dense(units=1000, activation='softmax',
                             kernel_initializer=kernel)(X)
-    return K.models.Model(inputs=X_input, outputs=output)
+    model = K.models.Model(inputs=img_input, outputs=output)
+    return model
