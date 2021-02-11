@@ -18,7 +18,7 @@ def resnet50():
     output = K.layers.MaxPooling2D((3, 3), strides=(2, 2),
                                    padding='same')(output)
 
-    output = projection_block(output, [64, 64, 256], s=1)
+    output = projection_block(output, [64, 64, 256])
     output = identity_block(output, [64, 64, 256])
     output = identity_block(output, [64, 64, 256])
 
