@@ -38,21 +38,21 @@ class Yolo:
             grid_height = out.shape[0]
             grid_width = out.shape[1]
             anchor_boxes = out.shape[2]
-            """#indices off grid"""
+            """indices off grid"""
             cx = np.indices((grid_height, grid_width, anchor_boxes))[1]
             cy = np.indices((grid_height, grid_width, anchor_boxes))[0]
-            """#indices of tx in grid"""
+            """indices of tx in grid"""
             bx = self.sigmoid(t_x) + cx
-            """#pos in image"""
+            """pos in image"""
             bx = bx / grid_width
             by = self.sigmoid(t_y) + cy
             by = by = by / grid_height
-            """#anchor shape"""
+            """anchor shape"""
             pw = self.anchors[i, :, 0]
             ph = self.anchors[i, :, 1]
-            """"#input model shape"""
-            input_w = self.model.input.shape[1]
-            input_h = self.model.input.shape[2]
+            """"input model shape"""
+            input_w = self.model.input.shape[1].value
+            input_h = self.model.input.shape[2].value
 
             bw = pw * np.exp(t_w) / input_w
             bh = ph * np.exp(t_h) / input_h
