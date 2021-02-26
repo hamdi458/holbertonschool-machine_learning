@@ -57,7 +57,7 @@ class Yolo:
 
             bw = pw * np.exp(t_w) / input_w
             bh = ph * np.exp(t_h) / input_h
-            
+
             x1 = (bx - bw / 2) * image_width
             x2 = (bx - bw / 2 + bw) * image_width
             y1 = (by - bh / 2) * image_height
