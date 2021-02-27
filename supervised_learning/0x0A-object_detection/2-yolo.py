@@ -72,7 +72,7 @@ class Yolo:
 
     def filter_boxes(self, boxes, box_confidences, box_class_probs):
         scores = []
-        box_classes = []	
+        box_classes = []
         box_class_scores = []
         filtering_mask = []
         filtred_boxes = []
