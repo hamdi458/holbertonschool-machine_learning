@@ -71,49 +71,27 @@ class Yolo:
         return boxes, box_confidence, box_class_probs
 
     def filter_boxes(self, boxes, box_confidences, box_class_probs):
-        """Returns a tuple of (filtered_boxes, box_classes, box_scores)
-        box_scores = []
-        filtered_boxes = []
-        box_classes = []
-        for item1, item2 in zip(box_class_probs, box_confidences):
-            box_scores.append(item1 * item2)
-        box_scores = [np.max(score, axis=-1) for score in box_scores]
-        box_scores = [box.reshape(-1) for box in box_scores]
-
-        box_scores = np.concatenate(box_scores)
-
-        filtering_mask = box_scores >= self.class_t
-        scores = tf.boolean_mask(box_scores, filtering_mask)
-
-        return filtered_boxes, box_classes, scores"""
-        box_scores = []
-        box_classes = []
+        scores = []
+        box_classes = []	
         box_class_scores = []
         filtering_mask = []
-        scores = []
-        boxess = []
+        filtred_boxes = []
         classes = []
 
         for i in range(len(boxes)):
-            """ Compute box scores"""
-            box_scores.append(box_confidences[i] * box_class_probs[i])
-            """ Find the box_classes thanks to the max box_scores,
-            keep track of the corresponding score
-            """
-            box_classes.append(np.argmax(box_scores[i], axis=3))
-            box_class_scores.append(np.max(box_scores[i], axis=3))
-            """filtering mask based on "box_class_scores" by using threshold"""
+            box_score = np.multiply(box_confidences[i], box_class_probs[i])
+            box_classes.append(np.argmax(box_score, axis=3))
+            box_class_scores.append(np.max(box_score, axis=3))
             filtering_mask.append(box_class_scores[i] >= self.class_t)
+            box_max_scores = np.max(box_score, axis=3).reshape(-1)
+            score = (box_max_scores >= self.class_t) * box_max_scores
+            score = score[score > 0]
+            scores.append(score)
+        filtred_boxes += (d[s] for d, s in zip(boxes, filtering_mask))
 
-        """ filter list by mask """
-        scores += (d[s] for d, s in zip(box_class_scores, filtering_mask))
-        boxess += (d[s] for d, s in zip(boxes, filtering_mask))
+        classes += (d[s] for d, s in zip(box_classes, filtering_mask))
 
-        classes += (d[s].flatten() for d, s in zip(box_classes,
-                                                   filtering_mask))
-
-        """ Flattening a list of NumPy arrays"""
-        classes = np.concatenate(classes).ravel()
-        boxess = np.concatenate(boxess)
-        scores = np.concatenate(scores).ravel()
-        return (boxess,  classes, scores)
+        classes = np.concatenate(classes)
+        filtred_boxes = np.concatenate(filtred_boxes)
+        scores = np.concatenate(scores)
+        return (filtred_boxes,  classes, scores)
