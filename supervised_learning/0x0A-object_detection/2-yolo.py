@@ -88,12 +88,11 @@ class Yolo:
             score = (box_max_scores >= self.class_t) * box_max_scores
             score = score[score > 0]
             scores.append(score)
-        filtred_boxes += (d[s] for d, s in zip(boxes, filtering_mask))
-
+            filtred_boxes += boxes[i][filtering_mask[i]].tolist()
         classes += (d[s] for d, s in zip(box_classes,
                                          filtering_mask))
 
         classes = np.concatenate(classes)
-        filtred_boxes = np.concatenate(filtred_boxes)
+        filtred_boxes = np.array(filtred_boxes)
         scores = np.concatenate(scores)
         return (filtred_boxes,  classes, scores)
