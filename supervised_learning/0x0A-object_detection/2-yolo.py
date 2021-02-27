@@ -106,7 +106,7 @@ class Yolo:
         filtred_boxes += (d[s] for d, s in zip(boxes, filtering_mask))
 
         classes += (d[s] for d, s in zip(box_classes,
-                                                   filtering_mask))
+                                         filtering_mask))
 
         classes = np.concatenate(classes)
         filtred_boxes = np.concatenate(filtred_boxes)
