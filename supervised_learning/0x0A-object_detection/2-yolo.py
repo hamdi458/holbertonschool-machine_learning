@@ -71,6 +71,7 @@ class Yolo:
         return boxes, box_confidence, box_class_probs
 
     def filter_boxes(self, boxes, box_confidences, box_class_probs):
+        """filter box"""
         scores = []
         box_classes = []
         box_class_scores = []
