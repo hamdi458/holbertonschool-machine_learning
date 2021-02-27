@@ -71,8 +71,8 @@ class Yolo:
         return boxes, box_confidence, box_class_probs
 
     def filter_boxes(self, boxes, box_confidences, box_class_probs):
-        """Returns a tuple of (filtered_boxes, box_classes, box_scores)"""
-        """box_scores = []
+        """Returns a tuple of (filtered_boxes, box_classes, box_scores)
+        box_scores = []
         filtered_boxes = []
         box_classes = []
         for item1, item2 in zip(box_class_probs, box_confidences):
