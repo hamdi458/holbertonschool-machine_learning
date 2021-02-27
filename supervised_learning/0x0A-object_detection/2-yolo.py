@@ -92,7 +92,7 @@ class Yolo:
         classes += (d[s].flatten() for d, s in zip(box_classes,
                                                    filtering_mask))
 
-        classes = np.concatenate(classes)
+        classes = np.concatenate(classes).ravel()
         filtred_boxes = np.concatenate(filtred_boxes)
-        scores = np.concatenate(scores)
+        scores = np.concatenate(scores).ravel()
         return (filtred_boxes,  classes, scores)
