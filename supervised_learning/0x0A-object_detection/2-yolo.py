@@ -78,21 +78,20 @@ class Yolo:
         filtering_mask = []
         filtred_boxes = []
         classes = []
+        box_scores = []
         for i in range(len(boxes)):
-            box_score = box_confidences[i] * box_class_probs[i]
-            box_classes.append(np.argmax(box_score, axis=3))
-            box_class_scores.append(np.max(box_score, axis=3))
+            box_scores.append(np.multiply(box_confidences[i], box_class_probs[i]))
+            box_classes.append(np.argmax(box_scores[i], axis=3))
+            box_class_scores.append(np.max(box_scores[i], axis=-1))
             filtering_mask.append(box_class_scores[i] >= self.class_t)
 
-            box_max_scores = np.max(box_score, axis=3).reshape(-1)
-            score = (box_max_scores >= self.class_t) * box_max_scores
-            score = score[score > 0]
-            scores.append(score)
-            filtred_boxes += boxes[i][filtering_mask[i]].tolist()
-        classes += (d[s] for d, s in zip(box_classes,
-                                         filtering_mask))
+        filtred_boxes += (d[s] for d, s in zip(boxes, filtering_mask))
+        scores += (d[s] for d, s in zip(box_class_scores, filtering_mask))
+
+        classes += (d[s].flatten() for d, s in zip(box_classes,
+                                                   filtering_mask))
 
         classes = np.concatenate(classes)
-        filtred_boxes = np.array(filtred_boxes)
+        filtred_boxes = np.concatenate(filtred_boxes)
         scores = np.concatenate(scores)
         return (filtred_boxes,  classes, scores)
