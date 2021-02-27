@@ -99,7 +99,6 @@ class Yolo:
             filtering_mask.append(box_class_scores[i] >= self.class_t)
 
             box_max_scores = np.max(box_score, axis=3).reshape(-1)
-            box_class_idx_del = np.where(box_max_scores < self.class_t)
             score = (box_max_scores >= self.class_t) * box_max_scores
             score = score[score > 0]
             scores.append(score)
