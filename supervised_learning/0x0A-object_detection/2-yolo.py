@@ -80,7 +80,8 @@ class Yolo:
         classes = []
         box_scores = []
         for i in range(len(boxes)):
-            box_scores.append(np.multiply(box_confidences[i], box_class_probs[i]))
+            box_scores.append(np.multiply(box_confidences[i],
+                                          box_class_probs[i]))
             box_classes.append(np.argmax(box_scores[i], axis=3))
             box_class_scores.append(np.max(box_scores[i], axis=-1))
             filtering_mask.append(box_class_scores[i] >= self.class_t)
