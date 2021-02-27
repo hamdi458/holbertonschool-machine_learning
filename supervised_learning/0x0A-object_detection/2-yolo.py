@@ -71,21 +71,7 @@ class Yolo:
         return boxes, box_confidence, box_class_probs
 
     def filter_boxes(self, boxes, box_confidences, box_class_probs):
-        """Returns a tuple of (filtered_boxes, box_classes, box_scores)
-        box_scores = []
-        filtered_boxes = []
-        box_classes = []
-        for item1, item2 in zip(box_class_probs, box_confidences):
-            box_scores.append(item1 * item2)
-        box_scores = [np.max(score, axis=-1) for score in box_scores]
-        box_scores = [box.reshape(-1) for box in box_scores]
-
-        box_scores = np.concatenate(box_scores)
-
-        filtering_mask = box_scores >= self.class_t
-        scores = tf.boolean_mask(box_scores, filtering_mask)
-
-        return filtered_boxes, box_classes, scores"""
+        """Returns a tuple of (filtered_boxes, box_classes, box_scores)"""
         scores = []
         box_classes = []
         box_class_scores = []
