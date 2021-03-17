@@ -104,7 +104,7 @@ def cofactor(matrix):
     pos = 0
     mat_cofactor = minor(matrix)
     for i in range(len(mat_cofactor)):
-        for j in range(len(mat_cofactor)):
+        for j in range(len(mat_cofactor[0])):
             pos += 1
             if pos % 2 == 0:
                 mat_cofactor[i][j] *= (-1)
