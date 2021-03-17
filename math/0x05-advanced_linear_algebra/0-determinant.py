@@ -3,7 +3,9 @@
 
 
 def construire_mat(mat, i):
-    """construire matrix"""
+    """
+    construire a new matrix
+    """
     new_mat = []
     for l in range(1, len(mat)):
         wiw = []
