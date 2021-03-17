@@ -24,7 +24,9 @@ def determinant(matrix):
     If matrix is not square, raise a ValueError with
         the message matrix must be a square matrix
     The list [[]] represents a 0x0 matrix
-    Returns: the determinant of matrix"""
+    Returns: the determinant of matrix
+    """
+
     if not isinstance(matrix, list) or matrix == []:
         raise TypeError('matrix must be a list of lists')
 
@@ -42,6 +44,7 @@ def determinant(matrix):
 
     if len(matrix) == 2:
         return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
+
     det = 0
     for i, j in enumerate(matrix[0]):
 
