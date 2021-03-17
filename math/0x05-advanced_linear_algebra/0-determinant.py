@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""calculates the determinant of a matrix:"""
+"""calculates the determinant of a matrix"""
 
 
 def construire_mat(mat, i):
-    '''construire matrix'''
+    """construire matrix"""
     new_mat = []
     for l in range(1, len(mat)):
         wiw = []
@@ -16,7 +16,14 @@ def construire_mat(mat, i):
 
 
 def determinant(matrix):
-    """calcul determinant matrix"""
+    """
+    matrix is a list of lists whose determinant should be calculated
+    If matrix is not a list of lists, raise a TypeError with
+        the message matrix must be a list of lists
+    If matrix is not square, raise a ValueError with
+        the message matrix must be a square matrix
+    The list [[]] represents a 0x0 matrix
+    Returns: the determinant of matrix"""
     if not isinstance(matrix, list) or matrix == []:
         raise TypeError('matrix must be a list of lists')
 
