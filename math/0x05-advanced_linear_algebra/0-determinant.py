@@ -11,7 +11,6 @@ def construire_mat(mat, i):
             if j != i:
                 wiw.append(mat[l][j])
         new_mat.append(wiw)
-
     return new_mat
 
 
