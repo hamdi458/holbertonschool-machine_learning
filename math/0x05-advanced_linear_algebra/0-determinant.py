@@ -47,5 +47,8 @@ def determinant(matrix):
     for i, j in enumerate(matrix[0]):
 
         new_mat = construire_mat(matrix, i)
-        det += j * (-1) ** i * determinant(new_mat)
+        if i % 2 == 1:
+            det += j * (-1) ** i * determinant(new_mat)
+        else:
+            det += j * determinant(new_mat)
     return det
