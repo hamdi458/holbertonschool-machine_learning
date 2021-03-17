@@ -27,7 +27,7 @@ def determinant(matrix):
     Returns: the determinant of matrix
     """
 
-        if len(matrix) == 0 or not isinstance(matrix, list):
+    if len(matrix) == 0 or not isinstance(matrix, list):
         raise TypeError("matrix must be a list of lists")
     if (len(matrix[0]) == 0):
         return 1
