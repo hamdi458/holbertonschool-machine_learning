@@ -7,11 +7,11 @@ def construire_mat(mat, i):
     construire a new matrix
     """
     new_mat = []
-    for l in range(1, len(mat)):
+    for r in range(1, len(mat)):
         wiw = []
         for j in range(len(mat[0])):
             if j != i:
-                wiw.append(mat[l][j])
+                wiw.append(mat[r][j])
         new_mat.append(wiw)
     return new_mat
 
