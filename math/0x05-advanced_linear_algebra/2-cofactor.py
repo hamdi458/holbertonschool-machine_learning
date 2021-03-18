@@ -101,6 +101,15 @@ def cofactor(matrix):
     """
     Function that calculates the cofactor matrix of a matrix
     """
+    if not isinstance(matrix, list):
+        raise TypeError("matrix must be a list of lists")
+    if not matrix:
+        raise TypeError("matrix must be a list of lists")
+    for item in matrix:
+        if len(item) != len(matrix):
+            raise ValueError("matrix must be a non-empty square matrix")
+        if not isinstance(item, list):
+            raise TypeError("matrix must be a list of lists")
     pos = 0
     mat_cofactor = minor(matrix)
     for i in range(len(mat_cofactor)):

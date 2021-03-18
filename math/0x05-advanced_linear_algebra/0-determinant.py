@@ -27,21 +27,25 @@ def determinant(matrix):
     Returns: the determinant of matrix
     """
 
-    if len(matrix) == 0 or not isinstance(matrix, list):
+    if not isinstance(matrix, list) or len(matrix) == 0:
         raise TypeError("matrix must be a list of lists")
-    if (len(matrix[0]) == 0):
+
+    if len(matrix) == 1 and len(matrix[0]) == 0:
         return 1
-    if len(matrix[0]) != len(matrix):
-        raise ValueError("matrix must be a square matrix")
-    for item in matrix:
-        if not isinstance(item, list):
+
+    for r in matrix:
+        if not isinstance(r, list):
             raise TypeError("matrix must be a list of lists")
 
-    if (len(matrix[0]) == 1):
+    for r in matrix:
+        if len(r) != len(matrix):
+            raise ValueError('matrix must be a square matrix')
+
+    if len(matrix) == 1:
         return matrix[0][0]
 
     if len(matrix) == 2:
-        return matrix[0][0]*matrix[1][1]-matrix[0][1]*matrix[1][0]
+        det = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
 
     det = 0
     for i, j in enumerate(matrix[0]):
