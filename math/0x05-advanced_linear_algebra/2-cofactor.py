@@ -7,11 +7,11 @@ def construire_mat(mat, i):
     construire a new matrix
     """
     new_mat = []
-    for l in range(1, len(mat)):
+    for r in range(1, len(mat)):
         wiw = []
         for j in range(len(mat[0])):
             if j != i:
-                wiw.append(mat[l][j])
+                wiw.append(mat[r][j])
         new_mat.append(wiw)
     return new_mat
 
@@ -60,11 +60,11 @@ def determinant(matrix):
 def const_mat_det(mat, i, j):
     """const mat determinant"""
     mat_det = []
-    for l in range(len(mat)):
+    for r in range(len(mat)):
         mat_det_row = []
         for c in range(len(mat)):
-            if i != l and j != c:
-                mat_det_row.append(mat[l][c])
+            if i != r and j != c:
+                mat_det_row.append(mat[r][c])
         if len(mat_det_row) > 0:
             mat_det.append(mat_det_row)
     return(mat_det)
