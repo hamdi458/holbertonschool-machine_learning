@@ -113,6 +113,8 @@ def cofactor(matrix):
     pos = 0
     mat_cofactor = minor(matrix)
     for i in range(len(mat_cofactor)):
+        if pos != 0:
+            pos=pos+1
         for j in range(len(mat_cofactor)):
             pos += 1
             if pos % 2 == 0:
