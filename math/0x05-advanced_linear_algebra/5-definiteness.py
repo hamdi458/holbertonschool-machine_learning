@@ -11,7 +11,6 @@ def definiteness(matrix):
     if len(matrix.shape) == 1:
         return None
 
-
     if not np.array_equal(matrix.T, matrix):
         return None
 
