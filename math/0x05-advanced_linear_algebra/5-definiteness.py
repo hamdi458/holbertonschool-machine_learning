@@ -12,7 +12,9 @@ def definiteness(matrix):
 
     if matrix.shape[0] != matrix.shape[1]:
         return None
-    
+
+    if not np.array_equal(matrix.T, matrix):
+        return None
     if np.all(np.linalg.eigvals(matrix) > 0):
         return("Positive definite")
     elif np.all(np.linalg.eigvals(matrix) < 0):
