@@ -11,14 +11,16 @@ def definiteness(matrix):
 
     if not np.array_equal(matrix.T, matrix):
         return None
-
-    if all(np.linalg.eig(matrix)[0] > 0):
-        return("Positive definite")
-    elif all(np.linalg.eig(matrix)[0] < 0):
-        return("negative definite")
-    elif all(np.linalg.eig(matrix)[0] >= 0):
-        return("Positive semi-definite")
-    elif all(np.linalg.eig(matrix)[0] <= 0):
-        return("negative semi-definite")
-    else:
-        return("Indefinite")
+    try:
+        if np.all(np.linalg.eig(matrix)[0] > 0):
+            return("Positive definite")
+        elif np.all(np.linalg.eig(matrix)[0] < 0):
+            return("negative definite")
+        elif np.all(np.linalg.eig(matrix)[0] >= 0):
+            return("Positive semi-definite")
+        elif np.all(np.linalg.eig(matrix)[0] <= 0):
+            return("negative semi-definite")
+        else:
+            return("Indefinite")
+    except Exception:
+        return None
