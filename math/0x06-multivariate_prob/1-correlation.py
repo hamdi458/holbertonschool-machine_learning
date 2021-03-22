@@ -1,0 +1,15 @@
+#!/usr/bin/env python3
+""" calculates a correlation matrix"""
+import numpy as np
+
+
+def correlation(C):
+    """that calculates a correlation matrix"""
+    if not isinstance(C, np.ndarray):
+        raise TypeError("C must be a numpy.ndarray")
+    if len(C.shape) != 2:
+        raise TypeError("X must be a 2D numpy.ndarray")
+    if C.shape[1] != C.shape[0]:
+        raise ValueError('C must be a 2D square matrix')
+    v = np.diag(1 / np.sqrt(np.diag(C)))
+    return(np.matmul(np.matmul(v, C), v))
