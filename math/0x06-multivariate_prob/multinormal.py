@@ -21,7 +21,7 @@ class MultiNormal(object):
     def pdf(self, x):
         """ value pdf"""
 
-        if type(x) != np.ndarray:
+        if not isinstance(x, np.ndarray):
             raise TypeError('x must be a numpy.ndarray')
 
         d = self.cov.shape[0]
@@ -30,7 +30,7 @@ class MultiNormal(object):
 
         if x.shape[1] != 1 or x.shape[0] != d:
             raise ValueError('x must have the shape ({}, 1)'.format(d))
-        n, d = x.shape
+        n, _ = x.shape
         var1 = np.sqrt(((2 * np.pi) ** n) * np.linalg.det(self.cov))
         var3 = np.dot((x - self.mean).T, np.linalg.inv(self.cov))
         var2 = (-0.5 * np.dot(var3, x - self.mean))
