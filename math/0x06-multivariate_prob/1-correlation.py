@@ -12,4 +12,5 @@ def correlation(C):
     if C.shape[1] != C.shape[0]:
         raise ValueError('C must be a 2D square matrix')
     v = np.diag(1 / np.sqrt(np.diag(C)))
-    return(np.matmul(np.matmul(v, C), v))
+    correlation = np.dot(np.dot(v, C), v)
+    return correlation
