@@ -17,3 +17,22 @@ class MultiNormal(object):
         self.mean = np.mean(data, axis=1, keepdims=True)
         X = data
         self.cov = 1/n * np.dot((X - self.mean), (X - self.mean).T)
+
+    def pdf(self, x):
+        """ value pdf"""
+
+        if type(x) != np.ndarray:
+            raise TypeError('x must be a numpy.ndarray')
+
+        d = self.cov.shape[0]
+        if len(x.shape) != 2:
+            raise ValueError('x must have the shape ({}, 1)'.format(d))
+
+        if x.shape[1] != 1 or x.shape[0] != d:
+            raise ValueError('x must have the shape ({}, 1)'.format(d))
+        n, d = x.shape
+        var1 = np.sqrt(((2 * np.pi) ** n) * np.linalg.det(self.cov))
+        var3 = np.dot((x - self.mean).T, np.linalg.inv(self.cov))
+        var2 = (-0.5 * np.dot(var3, x - self.mean))
+        pdf = (1 / var1) * np.exp(var2[0][0])
+        return pdf
