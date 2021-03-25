@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""marginal probability"""
+"""posterior"""
+
 import numpy as np
 
 
-def marginal(x, n, P, Pr):
+def posterior(x, n, P, Pr):
     """Function that calculates the marginal probability of obtaining data"""
 
     if not isinstance(n, int) or (n <= 0):
@@ -39,4 +40,5 @@ def marginal(x, n, P, Pr):
     fact *= (np.power(P, x)) * (np.power((1 - P), (n - x)))
 
     inter = fact * Pr
-    return np.sum(inter)
+    marg = np.sum(inter)
+    return inter / marg
