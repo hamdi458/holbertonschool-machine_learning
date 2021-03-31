@@ -12,6 +12,12 @@ def closest_centroid(points, centroids):
 
 def kmeans(X, k, iterations=1000):
     """ k means algo """
+    if type(X) is not np.ndarray or len(X.shape) != 2:
+        return None, None
+    if type(k) is not int or k <= 0:
+        return None, None
+    if type(iterations) is not int or iterations <= 0:
+        return None, None
     maxi = np.max(X, axis=0)
     mini = np.min(X, axis=0)
     centroid = np.random.uniform(low=mini, high=maxi, size=(k, X.shape[1]))
