@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """optimum number of clusters"""
+import numpy as np
+
 kmeans = __import__('1-kmeans').kmeans
 variance = __import__('2-variance').variance
-import numpy as np
 
 
 def optimum_k(X, kmin=1, kmax=None, iterations=1000):
@@ -27,12 +28,12 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
     results = []
     d_vars = []
     centroid, clss = kmeans(X, kmin, iterations)
-    results.append(tuple((centroid,clss)))
-    
+    results.append(tuple((centroid, clss)))
+
     d_vars.append(variance(X, centroid) - variance(X, centroid))
     v1 = variance(X, centroid)
     for i in range(kmin+1, kmax+1):
         centroid, clss = kmeans(X, i, iterations)
-        results.append(tuple((centroid,clss)))
+        results.append(tuple((centroid, clss)))
         d_vars.append(v1 - variance(X, centroid))
     return(results, d_vars)
