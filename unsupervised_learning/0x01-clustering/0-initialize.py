@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""initialize random centroids """
 import numpy as np
 
 
