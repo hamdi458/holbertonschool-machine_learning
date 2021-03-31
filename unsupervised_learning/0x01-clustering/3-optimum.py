@@ -27,10 +27,13 @@ def optimum_k(X, kmin=1, kmax=None, iterations=1000):
         return None, None
     results = []
     d_vars = []
-    for i in range(kmin, kmax+1):
+    centroid, clss = kmeans(X, kmin, iterations)
+    results.append(tuple((centroid, clss)))
+
+    d_vars.append(variance(X, centroid) - variance(X, centroid))
+    v1 = variance(X, centroid)
+    for i in range(kmin+1, kmax+1):
         centroid, clss = kmeans(X, i, iterations)
         results.append(tuple((centroid, clss)))
-        if i == kmin:
-            v1 = variance(X, centroid)
         d_vars.append(v1 - variance(X, centroid))
     return(results, d_vars)
