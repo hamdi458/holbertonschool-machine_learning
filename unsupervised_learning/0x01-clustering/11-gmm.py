@@ -1,4 +1,3 @@
- 
 #!/usr/bin/env python3
 """ calculates a GMM"""
 import sklearn.mixture
