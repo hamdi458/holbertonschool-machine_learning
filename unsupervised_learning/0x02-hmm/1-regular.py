@@ -7,7 +7,8 @@ def regular(P):
     """determines the steady state probabilities of a regular markov chain"""
     n = P.shape[0]
 
-    s = np.ones((1, n)) / n
+    s = np.zeros((1, n))
+    s[0,1] = 1
     for i in range(n):
         for j in range(n):
             if P[i, j] <= 0:
