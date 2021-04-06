@@ -20,7 +20,7 @@ def absorbing(P):
         for i in range(P.shape[0]):
             for j in range(P.shape[0]):
                 if (P[i, j] > 0 and not(any(chemin_absor) == i)):
-                    if and any(chemin_absor) == j:
+                    if any(chemin_absor) == j:
                         chemin_absor.append(i)
     if len(chemin_absor) < P.shape[0]:
         return False
