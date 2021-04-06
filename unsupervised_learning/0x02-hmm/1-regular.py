@@ -8,7 +8,7 @@ def regular(P):
     n = P.shape[0]
 
     s = np.zeros((1, n))
-    s[0,1] = 1
+    s[0, 1] = 1
     for i in range(n):
         for j in range(n):
             if P[i, j] <= 0:
