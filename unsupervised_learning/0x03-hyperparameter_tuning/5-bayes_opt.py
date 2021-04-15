@@ -47,19 +47,19 @@ class BayesianOptimization():
         X = []
 
         for _ in range(iterations):
-            Xop = self.acquisition()[0]
-            if Xop in X:
+            X_opt = self.acquisition()[0]
+            if X_opt in X:
                 break
-            Yop = self.f(Xop)
-            self.gp.update(Xop, Yop)
-            X.append(Xop)
+            Y_opt = self.f(X_opt)
+            self.gp.update(X_opt, Y_opt)
+            X.append(X_opt)
 
         if self.minimize is True:
             index = np.argmin(self.gp.Y)
         else:
             index = np.argmax(self.gp.Y)
 
-        Xop = self.gp.X[index]
-        Yop = self.gp.Y[index]
+        X_opt = self.gp.X[index]
+        X_opt = self.gp.Y[index]
 
-        return Xop, Yop
+        return X_opt, Y_opt
