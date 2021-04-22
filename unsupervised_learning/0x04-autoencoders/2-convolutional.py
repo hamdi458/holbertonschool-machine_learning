@@ -24,7 +24,7 @@ def autoencoder(input_dims, filters, latent_dims):
                                     padding='same')(dec)
         dec = keras.layers.UpSampling2D((2, 2))(dec)
         
-        if (i == len(filters) - 1):
+        if (i == len(filters)):
             break
         i = i+1
 
