@@ -3,9 +3,9 @@
 import tensorflow.keras as keras
 
 
-def sample(args):
+def sample(z):
     """samling a new points"""
-    z_mean, z_log_sigma = args
+    z_mean, z_log_sigma = z
     batch = keras.backend.shape(z_mean)[0]
     dims = keras.backend.int_shape(z_mean)[1]
     epsilon = keras.backend.random_normal(shape=(batch, dims))
@@ -21,7 +21,7 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
                                      activation='relu')(encoded)
     z_mean = keras.layers.Dense(latent_dims)(encoded)
     z_log_sigma = keras.layers.Dense(latent_dims)(encoded)
-    z = keras.layers.Lambda(sampling)([z_mean, z_log_sigma])
+    z = keras.layers.Lambda(sample)([z_mean, z_log_sigma])
     encoder = keras.Model(X, [z, z_mean, z_log_sigma])
     latentX = keras.Input(shape=(latent_dims,))
     decoded = latentX
