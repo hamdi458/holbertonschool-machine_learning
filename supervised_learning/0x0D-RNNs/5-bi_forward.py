@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""" structure bidirectional Cell """
+""" bidirectional Cell """
 
 import numpy as np
 
