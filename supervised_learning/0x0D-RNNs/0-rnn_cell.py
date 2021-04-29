@@ -4,6 +4,7 @@ import numpy as np
 
 
 class RNNCell:
+    """class RNNCell"""
     def __init__(self, i, h, o):
         """initialize"""
         self.Wh = np.random.normal(size=(i + h, h))
