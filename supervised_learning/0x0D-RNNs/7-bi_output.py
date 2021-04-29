@@ -28,6 +28,11 @@ class BidirectionalCell():
         hs = np.tanh(np.dot(hh, self.Whb) + self.bhb)
         return hs
 
+    def predict_softmax(self, x):
+        """function that performs softmax function"""
+        exp_scores = np.exp(x)
+        return exp_scores/np.sum((exp_scores), axis=1, keepdims=True)
+
     def output(self, H):
         """ calculates all outputs for the RNN """
         t, m, h = H.shape
@@ -35,7 +40,7 @@ class BidirectionalCell():
 
         for t_i in range(t):
             y = np.matmul(H[t_i], self.Wy) + self.by
-            y = softmax(y)
+            y = self.predict_softmax(y)
             Y.append(y)
         Y = np.array(y)
         return Y
