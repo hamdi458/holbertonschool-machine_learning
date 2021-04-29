@@ -4,6 +4,7 @@ import numpy as np
 
 
 class LSTMCell():
+    """class LSTMCell"""
     def __init__(self, i, h, o):
         """initialize class constructor"""
         self.Wf = np.random.normal(size=(i + h, h))
