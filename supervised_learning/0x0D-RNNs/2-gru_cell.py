@@ -4,6 +4,7 @@ import numpy as np
 
 
 class GRUCell():
+    """class GRULL"""
     def __init__(self, i, h, o):
         """initialize class constructor"""
         self.Wz = np.random.normal(size=(h + i, h))
