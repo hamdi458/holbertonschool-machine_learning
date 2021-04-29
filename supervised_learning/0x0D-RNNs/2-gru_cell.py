@@ -31,7 +31,7 @@ class GRUCell():
         s1 = self.sigmoid(np.dot(hh1, self.Wr) + self.br)
         s2 = self.sigmoid(np.dot(hh1, self.Wz) + self.bz)
 
-        hh2 = np.concatenate(((s1 * h_prev),x_t), axis=1)
+        hh2 = np.concatenate(((s1 * h_prev), x_t), axis=1)
         tan = np.tanh(np.matmul(hh2, self.Wh) + self.bh)
         hs = (1 - s2) * h_prev + s2 * tan
         y = np.dot(hs, self.Wy) + self.by
