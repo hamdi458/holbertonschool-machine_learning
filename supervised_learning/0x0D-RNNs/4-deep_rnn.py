@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python3
 """Program that performs forward propagation for a deep RNN"""
 import numpy as np
@@ -18,10 +17,8 @@ def deep_rnn(rnn_cells, X, h_0):
             h, y = i.forward(H[t_i][k], h)
             hh.append(h)
             k = k + 1
-
         H.append(hh)
         Y.append(y)
     H = np.array(H)
     Y = np.array(Y)
     return H, Y
-
