@@ -11,5 +11,5 @@ def bag_of_words(sentences, vocab=None):
         vocab = vectorizer.get_feature_names()
     else:
         vectorizer = CountVectorizer(vocabulary=vocab)
-        Xx = vectorizer.fit_transform(sentences)
+        x = vectorizer.fit_transform(sentences)
     return x.toarray(), vocab
