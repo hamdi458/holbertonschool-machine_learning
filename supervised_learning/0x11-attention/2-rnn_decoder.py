@@ -9,8 +9,6 @@ class RNNDecoder(tf.keras.Model):
     def __init__(self, vocab, embedding, units, batch):
         """class constructor"""
         super(RNNDecoder, self).__init__()
-        self.units = units
-        self.batch = batch
         self.embedding = tf.keras.layers.Embedding(vocab, embedding)
         self.gru = tf.keras.layers.GRU(units,
                                        return_sequences=True,
