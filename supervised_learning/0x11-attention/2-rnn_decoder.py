@@ -4,7 +4,7 @@ import tensorflow as tf
 SelfAttention = __import__('1-self_attention').SelfAttention
 
 
-class RNNDecoder(tf.keras.layers.Layer):
+class RNNDecoder(tf.keras.Model):
     """RNNDecoder class"""
     def __init__(self, vocab, embedding, units, batch):
         """class constructor"""
@@ -28,4 +28,3 @@ class RNNDecoder(tf.keras.layers.Layer):
         output = tf.reshape(output, (-1, output.shape[2]))
         x = self.F(output)
         return x, state
-        
