@@ -20,10 +20,10 @@ class RNNDecoder(tf.keras.Model):
 
     def call(self, x, s_prev, hidden_states):
         """decode for machine translation:"""
-        context_vector, attention_weights = self.attention(s_prev,
-                                                           hidden_states)
+        context_vector, _ = self.attention(s_prev, hidden_states)
         x = self.embedding(x)
-        x = tf.concat([tf.expand_dims(context_vector, 1), x], axis=-1)
+        context_vector = tf.expand_dims(context_vector, 1)
+        x = tf.concat([context_vector, x], axis=-1)
         output, state = self.gru(x)
         output = tf.reshape(output, (-1, output.shape[2]))
         x = self.F(output)
