@@ -44,7 +44,7 @@ class Dataset:
                                   Tout=[tf.int64,
                                   tf.int64],
                                   name=None)
-        ptt.set_shape[None]
-        enn.set_shape[None]
+        ptt.set_shape([None])
+        enn.set_shape([None])
         return ptt, enn
         
