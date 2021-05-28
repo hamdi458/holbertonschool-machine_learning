@@ -8,27 +8,30 @@ class Dataset:
     def __init__(self, batch_size, max_len):
         """initialize class constructor"""
         AUTOTUNE = tf.data.experimental.AUTOTUNE
-        self.data_train, inf = tfds.load('ted_hrlr_translate/pt_to_en',
-                                    split='train', as_supervised=True,
-                                    with_info =True)
+        self.batch_size = batch_size
+        self.max_len = max_len
+        self.data_train,info = tfds.load('ted_hrlr_translate/pt_to_en',
+                                    split='train', as_supervised=True,with_info =True)
         self.data_valid = tfds.load('ted_hrlr_translate/pt_to_en',
                                     split='validation', as_supervised=True)
-        buffer_size=inf.splits['train'].num_examples
+        buffer_size=info.splits['train'].num_examples
 
         a, b = self.tokenize_dataset(self.data_train)
         self.tokenizer_en = b
         self.tokenizer_pt = a
         self.data_train = self.data_train.map(self.tf_encode)
-        self.data_valid = self.data_valid.map(self.tf_encode)
+        
         self.data_train = self.data_train.filter(lambda x,y: tf.math.logical_and(
             tf.size(x)<=self.max_len , tf.size(y)<= self.max_len))
        
 
         self.data_train = self.data_train.cache().shuffle(buffer_size).padded_batch(
             self.batch_size).prefetch(buffer_size=AUTOTUNE)
-        self.data_valid = self.data_valid.filter(lambda x,y: tf.math.logical_and(
-            tf.size(x) <= self.max_len , tf.size(y) <= self.max_len)).padded_batch(self.batch_size)
+        
 
+        self.data_valid = self.data_valid.map(self.tf_encode)
+        self.data_valid = self.data_valid.filter(lambda x,y: tf.math.logical_and(tf.size(
+            x) <= self.max_len , tf.size(y) <= self.max_len)).padded_batch(self.batch_size)
     def tokenize_dataset(self, data):
         """creates sub-word tokenizers for our dataset"""
         pp = []
