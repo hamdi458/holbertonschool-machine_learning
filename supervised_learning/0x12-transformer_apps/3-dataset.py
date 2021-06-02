@@ -5,6 +5,7 @@ import tensorflow_datasets as tfds
 
 
 class Dataset:
+    """Dataset class"""
     def __init__(self, batch_size, max_len):
         """initialize class constructor"""
         AUTOTUNE = tf.data.experimental.AUTOTUNE
@@ -32,12 +33,14 @@ class Dataset:
         self.data_valid = self.data_valid.map(self.tf_encode)
         self.data_valid = self.data_valid.filter(lambda x,y: tf.math.logical_and(tf.size(
             x) <= self.max_len , tf.size(y) <= self.max_len)).padded_batch(self.batch_size)
+
     def tokenize_dataset(self, data):
         """creates sub-word tokenizers for our dataset"""
         pp = []
         ee = []
         for pt, en in data:
             pp.append(pt.numpy())
+            ee.append(en.numpy())
         tokenizer_pt = tfds.deprecated.text.SubwordTextEncoder.build_from_corpus(
             pp, target_vocab_size=2**15)
         tokenizer_en = tfds.deprecated.text.SubwordTextEncoder.build_from_corpus(
@@ -55,7 +58,9 @@ class Dataset:
         ptt, enn = tf.py_function(func=self.encode,
                                   inp=[pt, en],
                                   Tout=[tf.int64,
-                                  tf.int64], name=None)
+                                  tf.int64],
+                                  name=None)
         ptt.set_shape([None])
         enn.set_shape([None])
         return ptt, enn
+        
