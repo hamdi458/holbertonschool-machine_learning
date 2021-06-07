@@ -23,14 +23,16 @@ class Dataset:
         for pt, en in data:
             pp.append(pt.numpy())
             ee.append(en.numpy())
-        tokenizer_pt = tfds.deprecated.text.SubwordTextEncoder.build_from_corpus(
+        tokeniz_pt = tfds.deprecated.text.SubwordTextEncoder.build_from_corpus(
             pp, target_vocab_size=2**15)
-        tokenizer_en = tfds.deprecated.text.SubwordTextEncoder.build_from_corpus(
+        tokeniz_en = tfds.deprecated.text.SubwordTextEncoder.build_from_corpus(
             ee, target_vocab_size=2**15)
-        return tokenizer_pt, tokenizer_en
+        return tokeniz_pt, tokeniz_en
 
     def encode(self, pt, en):
         """encode function"""
-        tok_pt = [self.tokenizer_pt.vocab_size] + self.tokenizer_pt.encode(pt.numpy()) + [(self.tokenizer_pt.vocab_size) + 1]
-        tok_en = [self.tokenizer_en.vocab_size] + self.tokenizer_en.encode(en.numpy()) + [(self.tokenizer_en.vocab_size) + 1]
+        tok_pt = [self.tokenizer_pt.vocab_size] + self.tokenizer_pt.encode(
+            pt.numpy()) + [(self.tokenizer_pt.vocab_size) + 1]
+        tok_en = [self.tokenizer_en.vocab_size] + self.tokenizer_en.encode(
+            en.numpy()) + [(self.tokenizer_en.vocab_size) + 1]
         return tok_pt, tok_en
