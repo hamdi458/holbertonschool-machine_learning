@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-
+""" From Numpy
+"""
 import numpy as np
 import pandas as pd
 import string
 
 
 def from_numpy(array):
+    """ creates a pd.DataFrame from a np.ndarray"""
     index_values = list(string.ascii_lowercase)
     comumn_number = array.shape[0]
     column_values = []
