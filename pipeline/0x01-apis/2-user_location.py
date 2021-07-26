@@ -14,8 +14,8 @@ if __name__ == '__main__':
         print(data['location'])
 
     elif r.status_code == 403:
-        tim = data.headers['X-Ratelimit-Reset']
-        tim = int(tim) - int(time.time())
-        print("Reset in {} min".format(int(tim / 60)))
+        limit = req.headers["X-Ratelimit-Reset"]
+        x = (int(limit) - int(time.time())) / 60
+        print("Reset in {} min".format(int(x)))
     else:
         print('Not found')
