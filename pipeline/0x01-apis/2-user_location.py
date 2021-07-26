@@ -8,8 +8,7 @@ import sys
 
 
 if __name__ == '__main__':
-    url = sys.argv[1]
-    req = requests.get(url)
+    req = requests.get(sys.argv[1])
     data = req.json()
     if req .status_code == 404:
         print("Not found")
