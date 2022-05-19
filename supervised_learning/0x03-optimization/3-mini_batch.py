@@ -73,7 +73,7 @@ def train_mini_batch(
                     feed_dict={x: x_batch, y: y_batch}
                 )
 
-                if (step + 1) % 100 == 0:
+                if (step) % 100 == 0:
                     step_accuracy, step_cost = session.run(
                         [accuracy, loss], feed_dict={x: x_batch, y: y_batch}
                     )
