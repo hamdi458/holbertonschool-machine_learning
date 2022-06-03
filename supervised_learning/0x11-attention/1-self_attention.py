@@ -43,7 +43,7 @@ class SelfAttention(tf.keras.layers.Layer):
 
         # The alignment model:
         alignment_scores = self.V(
-            tf.nn.tanh(self.W(s_prev)[:, tf.newaxis] + self.U(hidden_states)))
+            tf.nn.tanh(self.W((s_prev)[:, tf.newaxis]) + self.U(hidden_states)))
 
         alignment_weights = tf.nn.softmax(alignment_scores, axis=1)
 
