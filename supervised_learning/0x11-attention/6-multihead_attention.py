@@ -57,7 +57,7 @@ class MultiHeadAttention(tf.keras.layers.Layer):
         attention_scores = tf.transpose(attention_scores, perm=[0, 2, 1, 3])
         # And merge the heads back into a single features axis
         attention_scores = tf.reshape(
-            attention_scores, (batch_size, self.dm))
+            attention_scores, (batch_size, -1,self.dm))
         output = self.linear(attention_scores)
 
         return output, weights
