@@ -53,8 +53,12 @@ class MultiHeadAttention(tf.keras.layers.Layer):
         v = tf.reshape(v, param)
         v = tf.transpose(v, perm=[0, 2, 1, 3])
 
-        softmax, output1 = sdp_attention(q, k, v, mask)
-        softmax = tf.transpose(softmax, perm=[0, 2, 1, 3])
-        concat = tf.reshape(softmax, (batch_size, -1, self.dm))
-        output = self.linear(concat)
-        return output, output1
+        attention_scores, weights = sdp_attention(q, k, v, mask)
+        # Un-swap the heads & tokens axes
+        attention_scores = tf.transpose(attention_scores, perm=[0, 2, 1, 3])
+        # And merge the heads back into a single features axis
+        attention_scores = tf.reshape(
+            attention_scores, (batch_size, -1, self.dm))
+        output = self.linear(attention_scores)
+
+        return output, weights
