@@ -41,21 +41,28 @@ class MultiHeadAttention(tf.keras.layers.Layer):
             weights: A tensor with its last three dimensions as (..., h,
                 seq_len_q, seq_len_v) containing the attention weights.
         """
-        batch_size = tf.shape(Q)[0]
         attention_parameters = [
             self.Wq(Q),
             self.Wk(K),
             self.Wv(V)
         ]
-        param = (batch_size, -1, self.h, self.depth)
-        q = tf.reshape(q, param)
-        attention_parameters[0] = tf.transpose(q, perm=[0, 2, 1, 3])
-        k = tf.reshape(k, param)
-        attention_parameters[1] = tf.transpose(k, perm=[0, 2, 1, 3])
-        v = tf.reshape(v, param)
-        attention_parameters[2] = tf.transpose(v, perm=[0, 2, 1, 3])
-        softmax, output1 = sdp_attention(attention_parameters[0], attention_parameters[1], attention_parameters[2], mask)
-        softmax = tf.transpose(softmax, perm=[0, 2, 1, 3])
-        concat = tf.reshape(softmax, (batch_size, -1, self.dm))
-        output = self.linear(concat)
-        return output, output1
+        for i, parameter in enumerate(attention_parameters):
+            # Split the feature axis into heads x depth, where depth is a
+            # subset/slice of the features
+            # Then, swap the heads & tokens axes
+            attention_parameters[i] = tf.transpose(
+                tf.reshape(
+                    parameter, (*parameter.shape[:-1], self.h, self.depth)
+                ),
+                perm=[0, 2, 1, 3]
+            )
+
+        attention_scores, weights = sdp_attention(*attention_parameters, mask)
+        # Un-swap the heads & tokens axes
+        attention_scores = tf.transpose(attention_scores, perm=[0, 2, 1, 3])
+        # And merge the heads back into a single features axis
+        attention_scores = tf.reshape(
+            attention_scores, (*attention_scores.shape[:-2], self.dm))
+        output = self.linear(attention_scores)
+
+        return output, weights
