@@ -46,13 +46,14 @@ class MultiHeadAttention(tf.keras.layers.Layer):
             self.Wk(K),
             self.Wv(V)
         ]
+        batch_size = tf.shape(Q)[0]
         for i, parameter in enumerate(attention_parameters):
             # Split the feature axis into heads x depth, where depth is a
             # subset/slice of the features
             # Then, swap the heads & tokens axes
             attention_parameters[i] = tf.transpose(
                 tf.reshape(
-                    parameter, (*parameter.shape[:-1], self.h, self.depth)
+                    parameter, (batch_size, self.h, self.depth)
                 ),
                 perm=[0, 2, 1, 3]
             )
