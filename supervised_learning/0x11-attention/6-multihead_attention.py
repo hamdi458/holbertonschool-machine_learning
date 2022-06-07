@@ -41,6 +41,7 @@ class MultiHeadAttention(tf.keras.layers.Layer):
             weights: A tensor with its last three dimensions as (..., h,
                 seq_len_q, seq_len_v) containing the attention weights.
         """
+        batch_size = tf.shape(Q)[0]
         attention_parameters = [
             self.Wq(Q),
             self.Wk(K),
@@ -52,7 +53,7 @@ class MultiHeadAttention(tf.keras.layers.Layer):
             # Then, swap the heads & tokens axes
             attention_parameters[i] = tf.transpose(
                 tf.reshape(
-                    parameter, (*parameter.shape[:-1],-1, self.h, self.depth)
+                    parameter, (batch_size,-1, self.h, self.depth)
                 ),
                 perm=[0, 2, 1, 3]
             )
@@ -62,7 +63,7 @@ class MultiHeadAttention(tf.keras.layers.Layer):
         attention_scores = tf.transpose(attention_scores, perm=[0, 2, 1, 3])
         # And merge the heads back into a single features axis
         attention_scores = tf.reshape(
-            attention_scores, (*attention_scores.shape[:-2],-1, self.dm))
+            attention_scores, (batch_size,-1, self.dm))
         output = self.linear(attention_scores)
 
         return output, weights
