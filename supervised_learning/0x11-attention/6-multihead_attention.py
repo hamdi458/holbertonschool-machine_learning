@@ -58,17 +58,22 @@ class MultiHeadAttention(tf.keras.layers.Layer):
                 (..., h, seq_len_q, seq_len_v) contains attention w
         """
         batch_size = tf.shape(Q)[0]
-        q = self.Wq(Q)
-        k = self.Wk(K)
-        v = self.Wv(V)
-        param = (batch_size, -1, self.h, self.depth)
-        q = tf.reshape(q, param)
-        q = tf.transpose(q, perm=[0, 2, 1, 3])
-        k = tf.reshape(k, param)
-        k = tf.transpose(k, perm=[0, 2, 1, 3])
-        v = tf.reshape(v, param)
-        v = tf.transpose(v, perm=[0, 2, 1, 3])
-        softmax, output1 = sdp_attention(q, k, v, mask)
+        attention_parameters = [
+            self.Wq(Q),
+            self.Wk(K),
+            self.Wv(V)
+        ]
+        for i, parameter in enumerate(attention_parameters):
+            # Split the feature axis into heads x depth, where depth is a
+            # subset/slice of the features
+            # Then, swap the heads & tokens axes
+            attention_parameters[i] = tf.transpose(
+                tf.reshape(
+                    parameter, (*parameter.shape[:-1], self.h, self.depth)
+                ),
+                perm=[0, 2, 1, 3]
+            )
+        softmax, output1 = sdp_attention(attention_parameters, mask)
         softmax = tf.transpose(softmax, perm=[0, 2, 1, 3])
         concat = tf.reshape(softmax, (batch_size, -1, self.dm))
         output = self.linear(concat)
