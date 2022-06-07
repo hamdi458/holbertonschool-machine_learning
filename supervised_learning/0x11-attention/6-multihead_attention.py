@@ -1,41 +1,22 @@
 #!/usr/bin/env python3
-""" Multi Head Attention """
+""" Defines `MultiHeadAttention`. """
 import tensorflow as tf
 sdp_attention = __import__('5-sdp_attention').sdp_attention
 
 
 class MultiHeadAttention(tf.keras.layers.Layer):
-    """ Perform multi head attention """
+    """ A multi-head attention layer. """
 
     def __init__(self, dm, h):
         """
-        Method:
-        -------
-            Class constructor
-        Parameters:
-        -----------
-            dm (integer): representing the dimensionality of the model.
-            h (integer): representing the number of heads.
-        **
-        dm is divisible by h
-        **
+        Initializes a MultiHeadAttention layer.
+        dm: An integer divisible by h representing the dimensionality of the
+            model.
+        h: An integer representing the number of heads.
         """
-        # Sets the following public instance attributes:
-
-        #     h - the number of heads
-        #     dm - the dimensionality of the model
-        #     depth - the depth of each attention head
-        #     Wq - a Dense layer with dm units,
-        #       used to generate the query matrix
-        #     Wk - a Dense layer with dm units,
-        #       used to generate the key matrix
-        #     Wv - a Dense layer with dm units,
-        #       used to generate the value matrix
-        #     linear - a Dense layer with dm units,
-        #       used to generate the attention output
-        super(MultiHeadAttention, self).__init__()
-        self.dm = dm
+        super().__init__()
         self.h = h
+        self.dm = dm
         self.depth = dm // h
         self.Wq = tf.keras.layers.Dense(dm)
         self.Wk = tf.keras.layers.Dense(dm)
@@ -44,37 +25,39 @@ class MultiHeadAttention(tf.keras.layers.Layer):
 
     def call(self, Q, K, V, mask):
         """
-        Public Instance Method
-        Q: tensor shape (batch, seq_len_q, dk) contains input to
-            generate the query matrix
-        K: tensor shape (batch, seq_len_v, dk) contains input to
-            generate the key matrix
-        V: tensor shape (batch, seq_len_v, dv) contains input to
-            generate the value matrix
-        Returns:
-            output: tensor with last two dims (..., seq_len_q, dm)
-                contains scaled dot product attention
-            w: tensor with last three dims
-                (..., h, seq_len_q, seq_len_v) contains attention w
+        Executes the MultiHeadAttention layer.
+        Q: A tensor of shape (batch, seq_len_q, dk) containing the input to
+            generate the query matrix.
+            dk: The number of feature dimensions in `K`.
+        K: A tensor of shape (batch, seq_len_v, dk) containing the input to
+            generate the key matrix.
+        V: A tensor of shape (batch, seq_len_v, dv) containing the input to
+            generate the value matrix.
+            dv: The number of feature dimensions in `V`.
+        mask: Always None.
+        Returns: (output, weights)
+            output: A tensor with its last two dimensions as (..., seq_len_q,
+                dm) containing the scaled dot product attention.
+            weights: A tensor with its last three dimensions as (..., h,
+                seq_len_q, seq_len_v) containing the attention weights.
         """
         batch_size = tf.shape(Q)[0]
-        attention_parameters = [
-            self.Wq(Q),
-            self.Wk(K),
-            self.Wv(V)
-        ]
-        for i, parameter in enumerate(attention_parameters):
-            # Split the feature axis into heads x depth, where depth is a
-            # subset/slice of the features
-            # Then, swap the heads & tokens axes
-            attention_parameters[i] = tf.transpose(
-                tf.reshape(
-                    parameter, (*parameter.shape[:-1], self.h, self.depth)
-                ),
-                perm=[0, 2, 1, 3]
-            )
-        softmax, output1 = sdp_attention(attention_parameters[0], attention_parameters[1],attention_parameters[2], mask)
-        softmax = tf.transpose(softmax, perm=[0, 2, 1, 3])
-        concat = tf.reshape(softmax, (batch_size, -1, self.dm))
-        output = self.linear(concat)
-        return output, output1
+        q = self.Wq(Q)
+        k = self.Wk(K)
+        v = self.Wv(V)
+        param = (batch_size, -1, self.h, self.depth)
+        q = tf.reshape(q, param)
+        q = tf.transpose(q, perm=[0, 2, 1, 3])
+        k = tf.reshape(k, param)
+        k = tf.transpose(k, perm=[0, 2, 1, 3])
+        v = tf.reshape(v, param)
+        v = tf.transpose(v, perm=[0, 2, 1, 3])
+        attention_scores, weights = sdp_attention(q,k,v, mask)
+        # Un-swap the heads & tokens axes
+        attention_scores = tf.transpose(attention_scores, perm=[0, 2, 1, 3])
+        # And merge the heads back into a single features axis
+        attention_scores = tf.reshape(
+            attention_scores, (batch_size, self.dm))
+        output = self.linear(attention_scores)
+
+        return output, weights
