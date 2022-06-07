@@ -42,17 +42,19 @@ class MultiHeadAttention(tf.keras.layers.Layer):
                 seq_len_q, seq_len_v) containing the attention weights.
         """
         batch_size = tf.shape(Q)[0]
-        q = self.Wq(Q)
-        k = self.Wk(K)
-        v = self.Wv(V)
+        attention_parameters = [
+            self.Wq(Q),
+            self.Wk(K),
+            self.Wv(V)
+        ]
         param = (batch_size, -1, self.h, self.depth)
         q = tf.reshape(q, param)
-        q = tf.transpose(q, perm=[0, 2, 1, 3])
+        attention_parameters[0] = tf.transpose(q, perm=[0, 2, 1, 3])
         k = tf.reshape(k, param)
-        k = tf.transpose(k, perm=[0, 2, 1, 3])
+        attention_parameters[1] = tf.transpose(k, perm=[0, 2, 1, 3])
         v = tf.reshape(v, param)
-        v = tf.transpose(v, perm=[0, 2, 1, 3])
-        softmax, output1 = sdp_attention(q, k, v, mask)
+        attention_parameters[2] = tf.transpose(v, perm=[0, 2, 1, 3])
+        softmax, output1 = sdp_attention(attention_parameters[0], attention_parameters[1], attention_parameters[2], mask)
         softmax = tf.transpose(softmax, perm=[0, 2, 1, 3])
         concat = tf.reshape(softmax, (batch_size, -1, self.dm))
         output = self.linear(concat)
