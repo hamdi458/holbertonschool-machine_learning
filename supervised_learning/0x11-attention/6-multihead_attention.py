@@ -51,12 +51,9 @@ class MultiHeadAttention(tf.keras.layers.Layer):
             # Split the feature axis into heads x depth, where depth is a
             # subset/slice of the features
             # Then, swap the heads & tokens axes
-            attention_parameters[i] = tf.transpose(
-                tf.reshape(
-                    parameter, (batch_size,-1, self.h, self.depth)
-                ),
-                perm=[0, 2, 1, 3]
-            )
+           
+            attention_parameters[i] = tf.reshape(parameter, (batch_size, -1, self.h, self.depth))
+            attention_parameters[i] = tf.transpose(attention_parameters[i], perm=[0, 2, 1, 3])
 
         attention_scores, weights = sdp_attention(attention_parameters[0], attention_parameters[1], attention_parameters[2], mask)
         # Un-swap the heads & tokens axes
