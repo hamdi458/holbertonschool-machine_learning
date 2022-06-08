@@ -46,7 +46,7 @@ class MultiHeadAttention(tf.keras.layers.Layer):
             self.Wk(K),
             self.Wv(V)
         ]
-        batch_size = attention_parameters[0].shape[0]
+        batch_size = tf.shape(attention_parameters[0])[0]
         for i, parameter in enumerate(attention_parameters):
             # Split the feature axis into heads x depth, where depth is a
             # subset/slice of the features
