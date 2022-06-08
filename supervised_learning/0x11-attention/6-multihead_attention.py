@@ -53,7 +53,7 @@ class MultiHeadAttention(tf.keras.layers.Layer):
             # Then, swap the heads & tokens axes
             attention_parameters[i] = tf.transpose(
                 tf.reshape(
-                    parameter, (batch_size, self.h, self.depth)
+                    parameter, (batch_size,-1, self.h, self.depth)
                 ),
                 perm=[0, 2, 1, 3]
             )
