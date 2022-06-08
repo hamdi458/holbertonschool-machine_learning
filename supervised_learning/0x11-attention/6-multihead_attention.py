@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """ Defines `MultiHeadAttention`. """
 import tensorflow as tf
-
 sdp_attention = __import__('5-sdp_attention').sdp_attention
+
 
 class MultiHeadAttention(tf.keras.layers.Layer):
     """ A multi-head attention layer. """
@@ -46,24 +46,23 @@ class MultiHeadAttention(tf.keras.layers.Layer):
             self.Wk(K),
             self.Wv(V)
         ]
-        batch_size = tf.shape(attention_parameters[0])[0]
         for i, parameter in enumerate(attention_parameters):
             # Split the feature axis into heads x depth, where depth is a
             # subset/slice of the features
             # Then, swap the heads & tokens axes
             attention_parameters[i] = tf.transpose(
                 tf.reshape(
-                    parameter, (batch_size,-1, self.h, self.depth)
+                    parameter, (*parameter.shape[:-1], self.h, self.depth)
                 ),
                 perm=[0, 2, 1, 3]
             )
 
-        attention_scores, weights = sdp_attention(attention_parameters[0], attention_parameters[1], attention_parameters[2], mask)
+        attention_scores, weights = sdp_attention(attention_parameters[0],attention_parameters[1],attention_parameters[2], mask)
         # Un-swap the heads & tokens axes
         attention_scores = tf.transpose(attention_scores, perm=[0, 2, 1, 3])
         # And merge the heads back into a single features axis
         attention_scores = tf.reshape(
-            attention_scores, (batch_size,-1, self.dm))
+            attention_scores, (*attention_scores.shape[:-2], self.dm))
         output = self.linear(attention_scores)
 
         return output, weights
