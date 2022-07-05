@@ -32,10 +32,10 @@ class Yolo:
             boxes.append(out[:, :, :, 0:4])
             box_confidence.append(self.sigmoid(out[:, :, :, 4:5]))
             box_class_probs.append(self.sigmoid(out[:, :, :, 5:]))
-            t_x = boxes[i][:, :, :, 0]
-            t_y = boxes[i][:, :, :, 1]
-            t_w = boxes[i][:, :, :, 2]
-            t_h = boxes[i][:, :, :, 3]
+            t_x = out[:, :, :, 0]
+            t_y = out[:, :, :, 1]
+            t_w =out[:, :, :, 2]
+            t_h = out[:, :, :, 3]
             grid_height = out.shape[0]
             grid_width = out.shape[1]
             anchor_boxes = out.shape[2]
