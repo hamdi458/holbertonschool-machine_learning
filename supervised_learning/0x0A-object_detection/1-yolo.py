@@ -65,10 +65,10 @@ class Yolo:
         for i, op in enumerate(outputs):
             grid_h, grid_w, anchor_boxes, cls = op.shape
             boxes.append(op[:, :, :, 0:4])
-            t_x = op[..., 0]
-            t_y = op[..., 1]
-            t_w = op[..., 2]
-            t_h = op[..., 3]
+            t_x = boxes[i][:, :, :, 0]
+            t_y = boxes[i][:, :, :, 1]
+            t_w = boxes[i][:, :, :, 2]
+            t_h = boxes[i][:, :, :, 3]
 
             # Calculate anchor boxes
 
