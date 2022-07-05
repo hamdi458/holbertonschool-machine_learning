@@ -69,7 +69,14 @@ class Yolo:
             t_y = boxes[i][:, :, :, 1]
             t_w = boxes[i][:, :, :, 2]
             t_h = boxes[i][:, :, :, 3]
+   # Predict and set confidence
+            confidence = (1 / (1 + np.exp(-op[..., 4])))
+            confidence = confidence.reshape(grid_h, grid_w, anchor_boxes, 1)
+            box_confidences.append(confidence)
 
+            # Predict class probability
+            prob = (1 / (1 + np.exp(-op[..., 5:])))
+            box_class_probs.append(prob)
            
             # Calculate corners
             cx = np.indices((grid_h, grid_w, anchor_boxes))[1]
@@ -98,13 +105,6 @@ class Yolo:
             boxes[i][:, :, :, 2] = x2
             boxes[i][:, :, :, 3] = y2
 
-            # Predict and set confidence
-            confidence = (1 / (1 + np.exp(-op[..., 4])))
-            confidence = confidence.reshape(grid_h, grid_w, anchor_boxes, 1)
-            box_confidences.append(confidence)
-
-            # Predict class probability
-            prob = (1 / (1 + np.exp(-op[..., 5:])))
-            box_class_probs.append(prob)
+         
 
         return (boxes, box_confidences, box_class_probs)
