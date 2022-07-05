@@ -28,7 +28,7 @@ class Yolo:
         box_class_probs = []
         ih, iw = image_size
         for i, op in enumerate(outputs):
-            grid_h, grid_w, anchor_boxes, cls = op.shape
+            grid_h, grid_w, anchor_boxes, _ = op.shape
             box = np.zeros(op[..., :4].shape)
 
             t_x = op[..., 0]
@@ -49,11 +49,8 @@ class Yolo:
             anchor_h = anchor_h.reshape(grid_h, 1, len(anchors_h[i]))
 
             # Calculate corners
-            cx = np.tile(np.arange(grid_w), grid_h)
-            cx = cx.reshape(grid_w, grid_w, 1)
-            cy = np.tile(np.arange(grid_h), grid_h)
-            cy = cy.reshape(grid_h, grid_h).T
-            cy = cy.reshape(grid_h, grid_h, 1)
+            cx = np.indices((grid_height, grid_width, anchor_boxes))[1]
+            cy = np.indices((grid_height, grid_width, anchor_boxes))[0]
 
             # prediction of each coordinate
             prediction_x = (1 / (1 + np.exp(-t_x))) + cx
@@ -81,6 +78,7 @@ class Yolo:
 
             # Predict and set confidence
             confidence = (1 / (1 + np.exp(-op[..., 4])))
+            confidence = confidence.reshape(grid_h, grid_w, anchor_boxes, 1)
             box_confidences.append(confidence)
 
             # Predict class probability
