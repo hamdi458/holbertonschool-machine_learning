@@ -23,50 +23,69 @@ class Yolo:
 
     def process_outputs(self, outputs, image_size):
         """outputs process"""
-        i = 0
         boxes = []
-        image_height, image_width = image_size
-        box_confidence = []
+        box_confidences = []
         box_class_probs = []
-        for out in outputs:
-            boxes.append(out[:, :, :, 0:4])
-            box_confidence.append(self.sigmoid(out[:, :, :, 4:5]))
-            box_class_probs.append(self.sigmoid(out[:, :, :, 5:]))
-            t_x = out[:, :, :, 0]
-            t_y = out[:, :, :, 1]
-            t_w =out[:, :, :, 2]
-            t_h = out[:, :, :, 3]
-            grid_height = out.shape[0]
-            grid_width = out.shape[1]
-            anchor_boxes = out.shape[2]
-            """indices off grid"""
-            cx = np.indices((grid_height, grid_width, anchor_boxes))[1]
-            cy = np.indices((grid_height, grid_width, anchor_boxes))[0]
-            """indices of tx in grid"""
-            bx = self.sigmoid(t_x) + cx
-            """pos in image"""
-            bx = bx / grid_width
-            by = self.sigmoid(t_y) + cy
-            by = by = by / grid_height
-            """anchor shape"""
-            pw = self.anchors[i, :, 0]
-            ph = self.anchors[i, :, 1]
-            """"input model shape"""
-            input_w = self.model.input_shape[1]
-            input_h = self.model.input_shape[2]
+        ih, iw = image_size
+        for i, op in enumerate(outputs):
+            grid_h, grid_w, anchor_boxes, cls = op.shape
+            box = np.zeros(op[..., :4].shape)
 
-            bw = pw * np.exp(t_w) / input_w
-            bh = ph * np.exp(t_h) / input_h
+            t_x = op[..., 0]
+            t_y = op[..., 1]
+            t_w = op[..., 2]
+            t_h = op[..., 3]
 
-            x1 = (bx - bw / 2) * image_width
-            x2 = (bx - bw / 2 + bw) * image_width
-            y1 = (by - bh / 2) * image_height
-            y2 = (by - bh / 2 + bh) * image_height
+            # Calculate anchor boxes
 
-            boxes[i][:, :, :, 0] = x1
-            boxes[i][:, :, :, 1] = y1
-            boxes[i][:, :, :, 2] = x2
-            boxes[i][:, :, :, 3] = y2
-            i = i + 1
+            anchors_w = self.anchors[..., 0]
+            # repeating each anchor belong all grids_w
+            anchor_w = np.tile(anchors_w[i], grid_w)
+            anchor_w = anchor_w.reshape(grid_w, 1, len(anchors_w[i]))
 
-        return boxes, box_confidence, box_class_probs
+            anchors_h = self.anchors[..., 1]
+            # repeating each anchor belong all grids_h
+            anchor_h = np.tile(anchors_h[i], grid_h)
+            anchor_h = anchor_h.reshape(grid_h, 1, len(anchors_h[i]))
+
+            # Calculate corners
+            cx = np.tile(np.arange(grid_w), grid_h)
+            cx = cx.reshape(grid_w, grid_w, 1)
+            cy = np.tile(np.arange(grid_h), grid_h)
+            cy = cy.reshape(grid_h, grid_h).T
+            cy = cy.reshape(grid_h, grid_h, 1)
+
+            # prediction of each coordinate
+            prediction_x = (1 / (1 + np.exp(-t_x))) + cx
+            prediction_y = (1 / (1 + np.exp(-t_y))) + cy
+            prediction_w = np.exp(t_w) * anchor_w
+            prediction_h = np.exp(t_h) * anchor_h
+
+            # Normalize values
+            prediction_x /= grid_w
+            prediction_y /= grid_h
+            prediction_w /= self.model.input.shape[1]
+            prediction_h /= self.model.input.shape[2]
+
+            x1 = (prediction_x - (prediction_w / 2)) * iw
+            y1 = (prediction_y - (prediction_h / 2)) * ih
+            x2 = (prediction_x + (prediction_w / 2)) * iw
+            y2 = (prediction_y + (prediction_h / 2)) * ih
+
+            # Setting coordinates
+            box[..., 0] = x1
+            box[..., 1] = y1
+            box[..., 2] = x2
+            box[..., 3] = y2
+            boxes.append(box)
+
+            # Predict and set confidence
+            confidence = (1 / (1 + np.exp(-op[..., 4])))
+            confidence = confidence.reshape(grid_h, grid_w, anchor_boxes, 1)
+            box_confidences.append(confidence)
+
+            # Predict class probability
+            prob = (1 / (1 + np.exp(-op[..., 5:])))
+            box_class_probs.append(prob)
+
+        return (boxes, box_confidences, box_class_probs)
