@@ -70,18 +70,7 @@ class Yolo:
             t_w = boxes[i][:, :, :, 2]
             t_h = boxes[i][:, :, :, 3]
 
-            # Calculate anchor boxes
-
-            anchors_w = self.anchors[..., 0]
-            # repeating each anchor belong all grids_w
-            anchor_w = np.tile(anchors_w[i], grid_w)
-            anchor_w = anchor_w.reshape(grid_w, 1, len(anchors_w[i]))
-
-            anchors_h = self.anchors[..., 1]
-            # repeating each anchor belong all grids_h
-            anchor_h = np.tile(anchors_h[i], grid_h)
-            anchor_h = anchor_h.reshape(grid_h, 1, len(anchors_h[i]))
-
+           
             # Calculate corners
             cx = np.indices((grid_h, grid_w, anchor_boxes))[1]
             cy = np.indices((grid_h, grid_w, anchor_boxes))[0]
@@ -89,8 +78,8 @@ class Yolo:
             # prediction of each coordinate
             prediction_x = (1 / (1 + np.exp(-t_x))) + cx
             prediction_y = (1 / (1 + np.exp(-t_y))) + cy
-            prediction_w = np.exp(t_w) * anchor_w
-            prediction_h = np.exp(t_h) * anchor_h
+            prediction_w = np.exp(t_w) * self.anchors[i, :, 0]
+            prediction_h = np.exp(t_h) * self.anchors[i, :, 1]
 
             # Normalize values
             prediction_x /= grid_w
