@@ -49,14 +49,17 @@ class Yolo:
             anchor_h = anchor_h.reshape(grid_h, 1, len(anchors_h[i]))
 
             # Calculate corners
-            cx = np.indices((grid_h, grid_w, anchor_boxes))[1]
-            cy = np.indices((grid_h, grid_w, anchor_boxes))[0]
+            cx = np.tile(np.arange(grid_w), grid_h)
+            cx = cx.reshape(grid_w, grid_w, 1)
+            cy = np.tile(np.arange(grid_h), grid_h)
+            cy = cy.reshape(grid_h, grid_h).T
+            cy = cy.reshape(grid_h, grid_h, 1)
 
             # prediction of each coordinate
             prediction_x = (1 / (1 + np.exp(-t_x))) + cx
             prediction_y = (1 / (1 + np.exp(-t_y))) + cy
-            prediction_w = np.exp(t_w) * anchor_w
-            prediction_h = np.exp(t_h) * anchor_h
+            prediction_w = np.exp(t_w) * self.anchors[i, :, 0]
+            prediction_h = np.exp(t_h) * self.anchors[i, :, 1]
 
             # Normalize values
             prediction_x /= grid_w
