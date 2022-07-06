@@ -1,7 +1,3 @@
-
- 71  
-supervised_learning/0x0A-object_detection/1-yolo.py
-@@ -0,0 +1,71 @@
 #!/usr/bin/env python3
 """class Yolo"""
 import tensorflow.keras as K
