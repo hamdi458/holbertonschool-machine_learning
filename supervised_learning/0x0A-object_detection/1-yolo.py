@@ -1,109 +1,75 @@
+
+ 71  
+supervised_learning/0x0A-object_detection/1-yolo.py
+@@ -0,0 +1,71 @@
 #!/usr/bin/env python3
-"""Initialize Yolo"""
-
-
+"""class Yolo"""
 import tensorflow.keras as K
 import numpy as np
 
 
 class Yolo:
-    """class Yolo that uses the Yolo v3 algorithm to perform object detectio"""
-
+    """uses the Yolo v3 algorithm to perform object detection"""
     def __init__(self, model_path, classes_path, class_t, nms_t, anchors):
-        """class constructor.
-        model_path: is the path to where a Darknet Keras model is stored
-        classes_path: is the path to where the list of class names used for the
-        Darknet model, listed in order of index, can be found
-        class_t: is a float representing the box score threshold for the
-        initial filtering step
-        nms_t: is a float representing the IOU threshold for non-max
-        suppression
-        anchors: is a numpy.ndarray of shape (outputs, anchor_boxes, 2)
-        containing all of the anchor boxes:
-            outputs: is the number of outputs (predictions) made by the Darknet
-            model
-            anchor_boxes: is the number of anchor boxes used for each
-            prediction 2 => [anchor_box_width, anchor_box_height]"""
-        self.model = K.models.load_model(model_path)
-        with open(classes_path, 'r') as f:
-            self.class_names = f.readlines()
+        self.model = K.models.load_model(filepath=model_path)
         self.class_t = class_t
         self.nms_t = nms_t
+        self.class_names = []
         self.anchors = anchors
+        with open(classes_path, 'r') as f:
+            for ligne in f:
+                self.class_names.append(ligne[0: -1])
+
+    def sigmoid(self, X):
+        """function actication sigmoid"""
+        return (1 / (1 + np.exp(-X)))
 
     def process_outputs(self, outputs, image_size):
-        """Function that process outputs
-        outputs is a list of numpy.ndarrays containing the predictions from
-        the Darknet model for a single image:
-            Each output will have the shape (grid_height, grid_width,
-            anchor_boxes, 4 + 1 + classes)
-                grid_height & grid_width => the height and width of the grid
-                used for the output
-                anchor_boxes => the number of anchor boxes used
-                4 => (t_x, t_y, t_w, t_h)
-                1 => box_confidence
-                classes => class probabilities for all classes
-        image_size is a numpy.ndarray containing the image’s original size
-        [image_height, image_width]
-        Returns a tuple of (boxes, box_confidences, box_class_probs):
-            boxes: a list of numpy.ndarrays of shape (grid_height, grid_width,
-            anchor_boxes, 4) containing the processed boundary boxes for each
-            output, respectively:
-            4 => (x1, y1, x2, y2)
-                (x1, y1, x2, y2) should represent the boundary box relative to
-                original image
-            box_confidences: a list of numpy.ndarrays of shape (grid_height,
-            grid_width, anchor_boxes, 1) containing the box confidences for
-            each output, respectively
-            box_class_probs: a list of numpy.ndarrays of shape (grid_height,
-            grid_width, anchor_boxes, classes) containing the box’s class
-            probabilities for each output, respectively"""
+        """grrrrrrrrr"""
+        i = 0
         boxes = []
-        box_confidences = []
+        image_height, image_width = image_size
+        box_confidence = []
         box_class_probs = []
-        ih, iw = image_size
-        for i, op in enumerate(outputs):
-            grid_h, grid_w, anchor_boxes, cls = op.shape
-            boxes.append(op[:, :, :, 0:4])
+        for out in outputs:
+            boxes.append(out[:, :, :, 0:4])
+            box_confidence.append(self.sigmoid(out[:, :, :, 4:5]))
+            box_class_probs.append(self.sigmoid(out[:, :, :, 5:]))
             t_x = boxes[i][:, :, :, 0]
             t_y = boxes[i][:, :, :, 1]
             t_w = boxes[i][:, :, :, 2]
             t_h = boxes[i][:, :, :, 3]
-   # Predict and set confidence
-            confidence = (1 / (1 + np.exp(-op[:,:,:, 4])))
-            box_confidences.append(confidence)
+            grid_height = out.shape[0]
+            grid_width = out.shape[1]
+            anchor_boxes = out.shape[2]
+            """#indices off grid"""
+            cx = np.indices((grid_height, grid_width, anchor_boxes))[1]
+            cy = np.indices((grid_height, grid_width, anchor_boxes))[0]
+            """#indices of tx in grid"""
+            bx = self.sigmoid(t_x) + cx
+            """#pos in image"""
+            bx = bx / grid_width
+            by = self.sigmoid(t_y) + cy
+            by = by = by / grid_height
+            """#anchor shape"""
+            pw = self.anchors[i, :, 0]
+            ph = self.anchors[i, :, 1]
+            """"#input model shape""""
+            input_w = self.model.input.shape[1]
+            input_h = self.model.input.shape[2]
 
-            # Predict class probability
-            prob = (1 / (1 + np.exp(-op[:,:,:, 5:])))
-            box_class_probs.append(prob)
-           
-            # Calculate corners
-            cx = np.indices((grid_h, grid_w, anchor_boxes))[1]
-            cy = np.indices((grid_h, grid_w, anchor_boxes))[0]
+            bw = pw * np.exp(t_w) / input_w
+            bh = ph * np.exp(t_h) / input_h
 
-            # prediction of each coordinate
-            prediction_x = (1 / (1 + np.exp(-t_x))) + cx
-            prediction_y = (1 / (1 + np.exp(-t_y))) + cy
-            prediction_w = np.exp(t_w) * self.anchors[i, :, 0]
-            prediction_h = np.exp(t_h) * self.anchors[i, :, 1]
+            x1 = (bx - bw / 2) * image_width
+            x2 = (bx - bw / 2 + bw) * image_width
+            y1 = (by - bh / 2) * image_height
+            y2 = (by - bh / 2 + bh) * image_height
 
-            # Normalize values
-            prediction_x /= grid_w
-            prediction_y /= grid_h
-            prediction_w /= self.model.input.shape[1]
-            prediction_h /= self.model.input.shape[2]
-
-            x1 = (prediction_x - (prediction_w / 2)) * iw
-            y1 = (prediction_y - (prediction_h / 2)) * ih
-            x2 = (prediction_x + (prediction_w / 2)) * iw
-            y2 = (prediction_y + (prediction_h / 2)) * ih
-
-            # Setting coordinates
             boxes[i][:, :, :, 0] = x1
             boxes[i][:, :, :, 1] = y1
             boxes[i][:, :, :, 2] = x2
             boxes[i][:, :, :, 3] = y2
+            i = i + 1
 
-         
-
-        return (boxes, box_confidences, box_class_probs)
+        return boxes, box_confidence, box_class_probs
