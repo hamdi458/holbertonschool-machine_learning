@@ -70,8 +70,8 @@ class Yolo:
             pw = self.anchors[i, :, 0]
             ph = self.anchors[i, :, 1]
             """ localisation in image of the model input"""
-            input_w = self.model.input.shape[1].value
-            input_h = self.model.input.shape[2].value
+            input_w = self.model.input.shape[1]
+            input_h = self.model.input.shape[2]
 
             bw = pw * np.exp(t_w) / input_w
             bh = ph * np.exp(t_h) / input_h
