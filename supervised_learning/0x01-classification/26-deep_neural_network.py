@@ -84,35 +84,35 @@ class DeepNeuralNetwork:
 
     def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True,
               graph=True, step=100):
-        """ Trains the deep neural network """
-        if type(iterations) != int:
+        """evaluation of the training data after iterations"""
+        if type(iterations) is not int:
             raise TypeError("iterations must be an integer")
-        if iterations <= 0:
+        if iterations < 1:
             raise ValueError("iterations must be a positive integer")
-        if type(alpha) != float:
+        if type(alpha) is not float:
             raise TypeError("alpha must be a float")
         if alpha <= 0:
             raise ValueError("alpha must be positive")
         if verbose or graph:
-            if type(step) != int:
+            if type(step) is not int:
                 raise TypeError("step must be an integer")
-            if step <= 0 or step >= iterations:
+            if step < 0 or step > iterations:
                 raise ValueError("step must be positive and <= iterations")
-        costs = []
-        step_array = list(range(0, iterations + 1, step))
-        for i in range(iterations + 1):
+        arrX = []
+        arrY = []
+        for it in range(iterations):
             self.forward_prop(X)
-            self.gradient_descent(Y, self.__cache, alpha)
-            cost = self.cost(Y, self.__cache['A' + str(self.__L)])
-            if verbose and (i % step == 0 or i == iterations):
-                costs.append(cost)
-                print("Cost after {} iterations: {}".format(i, cost))
-
+            self.gradient_descent(Y, self.cache, alpha)
+            j = self.cost(Y, self.cache["A"+str(self.L)])
+            if verbose:
+                print("Cost after {} iterations: {}".format(it, j))
+                arrX.append(it + step)
+                arrY.append(j)
         if graph:
-            plt.plot(step_array, costs)
+            plt.title('Training Cost')
             plt.xlabel('iteration')
             plt.ylabel('cost')
-            plt.title('Training Cost')
+            plt.plot(arrX, arrY)
             plt.show()
         return self.evaluate(X, Y)
 
