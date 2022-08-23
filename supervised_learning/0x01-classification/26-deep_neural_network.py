@@ -85,18 +85,18 @@ class DeepNeuralNetwork:
     def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True,
               graph=True, step=100):
         """evaluation of the training data after iterations"""
-        if type(iterations) is not int:
+        if type(iterations) != int:
             raise TypeError("iterations must be an integer")
-        if iterations < 1:
+        if iterations <= 0:
             raise ValueError("iterations must be a positive integer")
-        if type(alpha) is not float:
+        if type(alpha) != float:
             raise TypeError("alpha must be a float")
         if alpha <= 0:
             raise ValueError("alpha must be positive")
         if verbose or graph:
-            if type(step) is not int:
+            if type(step) != int:
                 raise TypeError("step must be an integer")
-            if step < 0 or step > iterations:
+            if step <= 0 or step >= iterations:
                 raise ValueError("step must be positive and <= iterations")
         arrX = []
         arrY = []
