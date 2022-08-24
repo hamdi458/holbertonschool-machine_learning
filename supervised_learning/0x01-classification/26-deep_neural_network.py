@@ -98,20 +98,21 @@ class DeepNeuralNetwork:
                 raise TypeError("step must be an integer")
             if step < 0 or step > iterations:
                 raise ValueError("step must be positive and <= iterations")
-        arrX =  list(range(0, iterations + 1, step))
-        arrY = []
-        for it in range(iterations):
+        costs = []
+        step_array = list(range(0, iterations + 1, step))
+        for i in range(iterations + 1):
             self.forward_prop(X)
-            self.gradient_descent(Y, self.cache, alpha)
-            j = self.cost(Y, self.cache["A"+str(self.L)])
-            if verbose:
-                print("Cost after {} iterations: {}".format(it, j))
-                arrY.append(j)
+            self.gradient_descent(Y, self.__cache, alpha)
+            cost = self.cost(Y, self.__cache['A' + str(self.__L)])
+            if verbose and (i % step == 0 or i == iterations):
+                costs.append(cost)
+                print("Cost after {} iterations: {}".format(i, cost))
+
         if graph:
             plt.title('Training Cost')
             plt.xlabel('iteration')
             plt.ylabel('cost')
-            plt.plot(arrX, arrY)
+            plt.plot(step_array, costs)
             plt.show()
         return self.evaluate(X, Y)
 
