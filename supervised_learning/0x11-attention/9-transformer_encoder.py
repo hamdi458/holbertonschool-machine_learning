@@ -20,12 +20,13 @@ class Encoder(tf.keras.layers.Layer):
         self.dropout = tf.keras.layers.Dropout(drop_rate)
 
     def call(self, x, training, mask):
-        """create the encoder for a transformer"""
-        x = self.embedding(x)
-        x *= tf.math.sqrt(tf.cast(self.dm, tf.float32))
-        x += self.positional_encoding[:x.shape[1], :]
-
-        x = self.dropout(x, training=training)
+        """ Function that returns tensor containing
+            the encoder output """
+        seq_len = x.shape[1]
+        emb = self.embedding(x)
+        emb *= tf.math.sqrt(tf.cast(self.dm, tf.float32))
+        emb += self.positional_encoding[:seq_len]
+        enc_outp = self.dropout(emb, training=training)
         for i in range(self.N):
-            x = self.blocks[i](x, training, mask)
-        return x
+            enc_outp = self.blocks[i](enc_outp, training, mask)
+        return enc_outp
