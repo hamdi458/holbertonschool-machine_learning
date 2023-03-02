@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Transformer Decoder Block"""
+""" Tranformer decoder block"""
+
 import tensorflow as tf
 MultiHeadAttention = __import__('6-multihead_attention').MultiHeadAttention
 
 
 class DecoderBlock(tf.keras.layers.Layer):
-    """class DecoderBlock"""
+    """ class DecoderBlock """
     def __init__(self, dm, h, hidden, drop_rate=0.1):
-        """initializer Class constructor """
+        """ Function that initializes """
         super().__init__()
         self.mha1 = MultiHeadAttention(dm, h)
         self.mha2 = MultiHeadAttention(dm, h)
@@ -22,16 +23,17 @@ class DecoderBlock(tf.keras.layers.Layer):
         self.dropout3 = tf.keras.layers.Dropout(drop_rate)
 
     def call(self, x, encoder_output, training, look_ahead_mask, padding_mask):
-        """ create an encoder block for a transformer"""
-        att, attn_weights_block1 = self.mha1(x, x, x, look_ahead_mask)
+        """ Function that returns a tensor containing the block’s output """
+        att, att_b = self.mha1(x, x, x, look_ahead_mask)
         att = self.dropout1(att, training=training)
-        output = self.layernorm1(att + x)
-        attn2, attn_weights_block2 = self.mha2(output, encoder_output,
+        outt = self.layernorm1(att + x)
+        atten, attn_weights_block2 = self.mha2(outt, encoder_output,
                                                encoder_output,
                                                padding_mask)
-        attn2 = self.dropout2(attn2, training=training)
-        out2 = self.layernorm2(attn2 + output)
-        out = self.dense_hidden(out2)
-        out = self.dense_output(out)
-        out = self.dropout3(out, training=training)
-        return self.layernorm3(out + out2)
+        atten = self.dropout2(atten, training=training)
+        outtn = self.layernorm2(atten + outt)
+        hidden_outp = self.dense_hidden(outtn)
+        outpp = self.dense_output(hidden_outp)
+        outpn = self.dropout3(outpp, training=training)
+        outp = self.layernorm3(outpn + outtn)
+        return outp
