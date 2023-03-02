@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
-""" Positional Encoding"""
+""" postitional encodingn """
+
 import numpy as np
 
 
 def positional_encoding(max_seq_len, dm):
-    """ calculates the positional encoding for a transformer"""
-    def calangels(position, i, d_model):
-        rates = 1 / np.power(10000, (2 * (i//2)) / np.float32(d_model))
-        return position * rates
-    angle_rads = calangels(np.arange(max_seq_len)[:, np.newaxis],
-                           np.arange(dm)[np.newaxis, :], dm)
-    angle_rads[:, 0::2] = np.sin(angle_rads[:, 0::2])
-    angle_rads[:, 1::2] = np.cos(angle_rads[:, 1::2])
-    return angle_rads
+    """ Function that calculates the positional
+        encoding for a transformer"""
+    enc = np.arange(max_seq_len)[:, np.newaxis]
+    x = np.arange(dm)[np.newaxis, :]
+    flt = np.float32(dm)
+    grad_angle = 1 / (np.power(10000, (2 * (x // 2) / flt)))
+    angle = enc * grad_angle
+    pos = np.zeros((max_seq_len, dm))
+    pos[:, 0::2] = np.sin(angle[:, 0::2])
+    pos[:, 1::2] = np.cos(angle[:, 1::2])
+    return pos
