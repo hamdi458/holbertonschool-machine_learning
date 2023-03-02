@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
-"""Transformer Encoder Block"""
+""" Transformer Encoder Block """
+
 import tensorflow as tf
 MultiHeadAttention = __import__('6-multihead_attention').MultiHeadAttention
 
 
 class EncoderBlock(tf.keras.layers.Layer):
-    """  encoder block for a transformer:"""
+    """ Encoder Block class"""
 
     def __init__(self, dm, h, hidden, drop_rate=0.1):
-        """initialize class constructor"""
+        """ Function that initilizes """
         super(EncoderBlock, self).__init__()
         self.mha = MultiHeadAttention(dm, h)
         self.dense_hidden = tf.keras.layers.Dense(hidden, activation='relu')
@@ -19,11 +20,12 @@ class EncoderBlock(tf.keras.layers.Layer):
         self.dropout2 = tf.keras.layers.Dropout(drop_rate)
 
     def call(self, x, training, mask=None):
-        """create an encoder block for a transformer"""
-        attontion_out, _ = self.mha(x, x, x, mask)
-        attontion_out = self.dropout1(attontion_out, training=training)
-        out1 = self.layernorm1(x + attontion_out)
-        ffn_output = self.dense_hidden(out1)
-        ffn_output = self.dense_output(ffn_output)
-        ffn_output = self.dropout2(ffn_output, training=training)
-        return self.layernorm2(out1 + ffn_output)
+        """ Function that returns a tensor that contains block’s output """
+        att_outp, _ = self.mha(x, x, x, mask)
+        att_outp = self.dropout1(att_outp, training=training)
+        outt = self.layernorm1(x + att_outp)
+        h_outp = self.dense_hidden(outt)
+        h_outp = self.dense_output(h_outp)
+        h_outp = self.dropout2(h_outp, training=training)
+        outp = self.layernorm2(outt + h_outp)
+        return outp
