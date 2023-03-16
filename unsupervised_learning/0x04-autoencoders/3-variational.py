@@ -1,43 +1,53 @@
 #!/usr/bin/env python3
-import tensorflow.keras as K
+import tensorflow.keras as keras
+
 
 def autoencoder(input_dims, hidden_layers, latent_dims):
-    # Encoder
-    enc_in = K.layers.Input(shape=(input_dims,))
-    x = enc_in
-    for layer_size in hidden_layers:
-        x = K.layers.Dense(layer_size, activation="relu")(x)
+    """
+    Build a Variational Autoencoder.
+    Args:
+        input_dims : input dimension which is the same as output
+        hidden_layers: list number of nodes in each hidden layer
+        latent_dims: dimension of the latent space layer
+    Return:
+        Model: the autoencoder keras model
+    """
+    # The encoder
+    X = keras.Input((input_dims,))
+    en = X
+    for nl in hidden_layers:
+        en = keras.layers.Dense(nl, activation='relu')(en)
+    elogvar = keras.layers.Dense(latent_dims, activation=None)(en)
+    emean = keras.layers.Dense(latent_dims, activation=None)(en)
 
-    z_mean = K.layers.Dense(latent_dims)(x)
-    z_log_var = K.layers.Dense(latent_dims)(x)
+    def sampling(params):
+        mu, logvar = params
+        epsilon = keras.backend.random_normal(shape=(keras.backend.shape(mu)[0], latent_dims), mean=0.0, stddev=1.0)
+        return mu + keras.backend.exp(0.5 * logvar) * epsilon
 
-    def sampling(args):
-        z_mean, z_log_var = args
-        epsilon = K.backend.random_normal(shape=K.backend.shape(z_mean))
-        return z_mean + K.backend.exp(z_log_var / 2) * epsilon
+    z = keras.layers.Lambda(sampling)((emean, elogvar))
+    encoder = keras.Model(X, [z, emean, elogvar])
 
-    z = K.layers.Lambda(sampling)([z_mean, z_log_var])
-    encoder = K.Model(enc_in, [z, z_mean, z_log_var])
+    # The Decoder
+    de_X = keras.Input((latent_dims,))
+    de = de_X
+    for nl in hidden_layers[::-1]:
+        de = keras.layers.Dense(nl, activation='relu')(de)
+    de_final = keras.layers.Dense(input_dims, activation='sigmoid')(de)
+    decoder = keras.Model(de_X, de_final)
 
-    # Decoder
-    dec_in = K.layers.Input(shape=(latent_dims,))
-    x = dec_in
-    for layer_size in reversed(hidden_layers):
-        x = K.layers.Dense(layer_size, activation="relu")(x)
-    x = K.layers.Dense(input_dims, activation="sigmoid")(x)
-    decoder = K.Model(dec_in, x)
+    # The AutoEncoder
+    enc, mu, logvar = encoder(X)
 
-    # Instantiate VAE model
-    outputs = decoder(encoder(enc_in)[0])
-    vae = K.Model(enc_in, outputs)
+    dec = decoder(enc)
+    auto = keras.Model(X, dec)
 
-    # Define loss function
-    def vae_loss(x, x_decoded_mean):
-        xent_loss = K.backend.binary_crossentropy(x, x_decoded_mean)
-        kl_loss = - 0.5 * K.backend.mean(1 + z_log_var - K.backend.square(z_mean) - K.backend.exp(z_log_var), axis=-1)
-        return K.backend.mean(xent_loss + kl_loss)
+    def vae_loss(y_true, y_pred):
+        reconstruction_loss = keras.losses.binary_crossentropy(y_true, y_pred) * input_dims
+        kl_loss = -0.5 * keras.backend.mean(1 + elogvar - keras.backend.square(emean) - keras.backend.exp(elogvar), axis=-1)
+        vae_loss = keras.backend.mean(reconstruction_loss + kl_loss)
+        return vae_loss
 
-    # Compile VAE model
-    vae.compile(optimizer='adam', loss=vae_loss)
+    auto.compile(optimizer='adam', loss=vae_loss)
 
-    return encoder, decoder, vae
+    return encoder, decoder, auto
