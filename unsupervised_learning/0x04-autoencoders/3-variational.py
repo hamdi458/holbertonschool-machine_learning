@@ -1,20 +1,5 @@
 #!/usr/bin/env python3
-"""
-Build a Variational Autoencoder, in a variational Autoencoder we wish to
-generate new data points from the vector space of our original data,
-we want the generated data to be similar but not the same.
-"""
-
 import tensorflow.keras as keras
-
-
-def sample(z):
-    """sampling a new point"""
-    z_mean, z_log_sigma = z
-    batch = keras.backend.shape(z_mean)[0]
-    dims = keras.backend.int_shape(z_mean)[1]
-    epsilon = keras.backend.random_normal(shape=(batch, dims))
-    return z_mean + keras.backend.exp(z_log_sigma / 2) * epsilon
 
 
 def autoencoder(input_dims, hidden_layers, latent_dims):
@@ -38,10 +23,9 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
     def sampler(params):
         mu, logstd = params
         rand = keras.backend.random_normal((keras.backend.shape(mu)[0],
-                                            latent_dims), mean=0,
-                                            stddev=1)
+                                           latent_dims), mean=0,
+                                           stddev=1)
         return mu + keras.backend.exp(logstd / 2) * rand
-
     en_final = keras.layers.Lambda(sampler)((emean, elogvar))
     encoder = keras.Model(X, [en_final, emean, elogvar])
 
@@ -61,9 +45,9 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
 
     def vae_loss(y_true, y_pred):
         bce_loss = keras.losses.binary_crossentropy(y_pred,
-                                                     y_true) * input_dims
-        kl_loss = keras.backend.sum(1 + logvar - keras.backend.square(mu) -
-                                    keras.backend.exp(logvar), axis=-1) * -0.5
+                                                    y_true) * input_dims
+        kl_loss = keras.backend.sum(1 + elogvar - keras.backend.square(emean) -
+                                    keras.backend.exp(elogvar), axis=-1) * -0.5
         vae_loss = keras.backend.mean(bce_loss + kl_loss)
         return vae_loss
 
