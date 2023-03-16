@@ -20,13 +20,14 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
     elogvar = keras.layers.Dense(latent_dims, activation=None)(en)
     emean = keras.layers.Dense(latent_dims, activation=None)(en)
 
-    def sampling(params):
-        mu, logvar = params
-        epsilon = keras.backend.random_normal(shape=(keras.backend.shape(mu)[0], latent_dims), mean=0.0, stddev=1.0)
-        return mu + keras.backend.exp(0.5 * logvar) * epsilon
-
-    z = keras.layers.Lambda(sampling)((emean, elogvar))
-    encoder = keras.Model(X, [z, emean, elogvar])
+    def sampler(params):
+        mu, logstd = params
+        rand = keras.backend.random_normal((keras.backend.shape(mu)[0],
+                                           latent_dims), mean=0,
+                                           stddev=1)
+        return mu + keras.backend.exp(logstd / 2) * rand
+    en_final = keras.layers.Lambda(sampler)((emean, elogvar))
+    encoder = keras.Model(X, [en_final, emean, elogvar])
 
     # The Decoder
     de_X = keras.Input((latent_dims,))
@@ -43,11 +44,15 @@ def autoencoder(input_dims, hidden_layers, latent_dims):
     auto = keras.Model(X, dec)
 
     def vae_loss(y_true, y_pred):
-        reconstruction_loss = keras.losses.binary_crossentropy(y_true, y_pred) * input_dims
-        kl_loss = -0.5 * keras.backend.mean(1 + elogvar - keras.backend.square(emean) - keras.backend.exp(elogvar), axis=-1)
-        vae_loss = keras.backend.mean(reconstruction_loss + kl_loss)
+        bce_loss = keras.losses.binary_crossentropy(y_pred,
+                                                    y_true) * input_dims
+        kl_loss = keras.backend.sum(1 + logvar - keras.backend.square(mu) -
+                                    keras.backend.exp(logvar), axis=-1) * -0.5
+        vae_loss = keras.backend.mean(bce_loss + kl_loss)
         return vae_loss
 
+    # auto.add_loss(bce_loss)
+    # auto.compile(optimizer='adam')
     auto.compile(optimizer='adam', loss=vae_loss)
 
     return encoder, decoder, auto
