@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+"""
+Build a Variational Autoencoder, in a variational Autoencoder we wish to
+generate new data points from the vector space of our original data,
+we want the generated data to be similar but not the same.
+"""
+
 import tensorflow.keras as keras
 
 
