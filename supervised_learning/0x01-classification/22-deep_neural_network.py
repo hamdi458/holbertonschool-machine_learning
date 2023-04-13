@@ -80,17 +80,40 @@ class DeepNeuralNetwork:
             dz = np.dot(wht["W"+str(i)].T, dz) * w
         return self.__weights
 
-    def train(self, X, Y, iterations=5000, alpha=0.05):
-        """Trains the deep neural network"""
-        if type(iterations) is not int:
+    def _check_iterations(interations: int) -> None:
+        """
+        Chec the iteration variable
+        :param interations: The number of gradient descente iteration
+        :return: Nothing
+        """
+        if not isinstance(interations, int):
             raise TypeError("iterations must be an integer")
-        if iterations < 1:
+        if interations <= 0:
             raise ValueError("iterations must be a positive integer")
-        if type(alpha) is not float:
+
+
+    def _check_alpha(alpha: float) -> None:
+        """
+        Check the learning rate parameter
+        :param alpha: The learning rate parameter
+        :return: Nothing
+        """
+        if not isinstance(alpha, float):
             raise TypeError("alpha must be a float")
         if alpha <= 0:
             raise ValueError("alpha must be positive")
-        for it in range(iterations):
-            self.forward_prop(X)
-            self.gradient_descent(Y, self.cache, alpha)
+    def train(self, X, Y, iterations=5000, alpha=0.05):
+        """
+        Train the model up to n iteration
+        :param X: The data set
+        :param Y: The thruth label
+        :param iterations: The number of iteration
+        :param alpha: The learning rate
+        :return: The evaluation of the model
+        """
+        _check_iterations(iterations)
+        _check_alpha(alpha)
+        for _ in range(iterations):
+            _, cache = self.forward_prop(X)
+            self.gradient_descent(Y, cache, alpha)
         return self.evaluate(X, Y)
